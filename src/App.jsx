@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FiGithub, FiExternalLink, FiArrowUp, FiLinkedin, FiInstagram, FiMail, FiUser, FiMessageSquare } from "react-icons/fi";
+import { FiGithub, FiExternalLink, FiArrowUp, FiLinkedin, FiInstagram, FiMail, FiUser, FiMessageSquare, FiX } from "react-icons/fi";
 
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +22,31 @@ export default function Portfolio() {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      setShowThankYouModal(true);
+      form.reset();
+    } else {
+      console.error('Form submission failed');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
   const sectionVariant = {
     hidden: { opacity: 0, y: 20 },
@@ -45,11 +71,53 @@ export default function Portfolio() {
     { name: "UI/UX", level: 80 },
     { name: "Java/Spring", level: 70 },
     { name: "Flutter", level: 65 },
-    
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 font-sans overflow-x-hidden">
+      {/* Modal de Agradecimento */}
+      {showThankYouModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <motion.div 
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      transition={{ type: "spring", damping: 20 }}
+      className="bg-white rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-4 sm:p-6 md:p-8 relative shadow-2xl"
+    >
+      <button 
+        onClick={() => setShowThankYouModal(false)}
+        className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700"
+        aria-label="Fechar modal"
+      >
+        <FiX size={20} className="sm:w-6 sm:h-6" />
+      </button>
+      
+      <div className="text-center">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          <svg className="w-8 h-8 sm:w-10 sm:w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">
+          Obrigado!
+        </h3>
+        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+          Sua mensagem foi enviada com sucesso. Entrarei em contato em breve.
+        </p>
+        
+        <button
+          onClick={() => setShowThankYouModal(false)}
+          className="px-4 py-2 sm:px-6 sm:py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base"
+        >
+          Fechar
+        </button>
+      </div>
+    </motion.div>
+  </div>
+)}
+
       {/* Mobile Menu Button */}
       <button 
         onClick={toggleMenu}
@@ -135,7 +203,10 @@ export default function Portfolio() {
             transition={{ delay: 0.3 }}
             className="text-4xl md:text-5xl font-bold leading-tight mb-2"
           >
-            Emerson <span className="text-yellow-300">Morales</span>
+            <span className="bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-300 bg-clip-text text-transparent">
+              Emerson Morales
+            </span>
+            <span className="text-white"> Jr</span>
           </motion.h1>
           
           <motion.p 
@@ -356,7 +427,9 @@ export default function Portfolio() {
               whileHover={{ y: -10 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100"
             >
-              <div className="h-40 md:h-48 bg-gradient-to-r from-purple-400 to-indigo-500"></div>
+              <div className="h-40 md:h-48 bg-gradient-to-r from-purple-400 to-indigo-500">
+                <img src="/Portfolio.png" alt="" />
+              </div>
               <div className="p-4 md:p-6">
                 <h3 className="text-lg md:text-xl font-semibold mb-2">{project.title}</h3>
                 <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">{project.description}</p>
@@ -371,7 +444,7 @@ export default function Portfolio() {
                   <a href="https://github.com/emersonjrdev" className="text-indigo-600 hover:text-indigo-800">
                     <FiGithub size={18} />
                   </a>
-                  <a href="https://github.com/emersonjrdev" className="text-indigo-600 hover:text-indigo-800">
+                  <a href="https://emersondev.vercel.app" className="text-indigo-600 hover:text-indigo-800">
                     <FiExternalLink size={18} />
                   </a>
                 </div>
@@ -450,7 +523,14 @@ export default function Portfolio() {
           <motion.form 
             variants={itemVariant}
             className="bg-white p-4 md:p-6 lg:p-8 rounded-xl shadow-lg"
+            action="https://formsubmit.co/contato.juniormorales@gmail.com" 
+            method="POST"
+            onSubmit={handleSubmit}
           >
+            {/* Campos ocultos para configurar o FormSubmit */}
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
+
             <div className="mb-4 md:mb-6">
               <label htmlFor="name" className="block text-gray-700 mb-1 md:mb-2 text-sm md:text-base">Nome</label>
               <div className="relative">
@@ -460,6 +540,8 @@ export default function Portfolio() {
                 <input 
                   type="text" 
                   id="name" 
+                  name="name"
+                  required
                   className="w-full pl-10 pr-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm md:text-base"
                   placeholder="Seu nome"
                 />
@@ -475,6 +557,8 @@ export default function Portfolio() {
                 <input 
                   type="email" 
                   id="email" 
+                  name="email"
+                  required
                   className="w-full pl-10 pr-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm md:text-base"
                   placeholder="seu@email.com"
                 />
@@ -489,6 +573,8 @@ export default function Portfolio() {
                 </div>
                 <textarea 
                   id="message" 
+                  name="message"
+                  required
                   rows="4"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm md:text-base"
                   placeholder="Sua mensagem..."
