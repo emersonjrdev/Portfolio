@@ -77,7 +77,7 @@ export default function Portfolio() {
           <a href="#contato" onClick={toggleMenu} className="hover:text-yellow-300 transition">Contato</a>
         </nav>
         <div className="mt-12 flex gap-6">
-          <a href="https://www.linkedin.com/in/emerson-morales-junior" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition">
+          <a href="https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition">
             <FiLinkedin size={24} />
           </a>
           <a href="https://www.instagram.com/emersxn_jr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition">
@@ -418,7 +418,7 @@ export default function Portfolio() {
                 <div>
                   <p className="text-xs md:text-sm text-gray-500">LinkedIn</p>
                   <a 
-                    href="https://www.linkedin.com/in/emerson-morales-junior" 
+                    href="https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-base md:text-lg font-medium hover:text-indigo-600 transition"
@@ -519,7 +519,7 @@ export default function Portfolio() {
           <div className="flex justify-center space-x-4 md:space-x-6 mb-4 md:mb-6">
             {[
               { icon: <FiGithub size={20} />, url: "https://github.com/emersonjrdev" },
-              { icon: <FiLinkedin size={20} />, url: "https://www.linkedin.com/in/emerson-morales-junior" },
+              { icon: <FiLinkedin size={20} />, url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" },
               { icon: <FiInstagram size={20} />, url: "https://www.instagram.com/emersxn_jr" }
             ].map((social, index) => (
               <motion.a
