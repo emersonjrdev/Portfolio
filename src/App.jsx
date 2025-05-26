@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiGithub, FiExternalLink, FiArrowUp, FiLinkedin, FiInstagram, FiMail, FiUser, FiMessageSquare, FiX } from "react-icons/fi";
+import { SiReact, SiNodedotjs, SiSpring, SiFlutter, SiTailwindcss, SiMysql, SiFigma, SiOpenjdk } from "react-icons/si";
 
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
@@ -23,30 +24,30 @@ export default function Portfolio() {
     setMenuOpen(!menuOpen);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const formData = new FormData(form);
-  
-  try {
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
     
-    if (response.ok) {
-      setShowThankYouModal(true);
-      form.reset();
-    } else {
-      console.error('Form submission failed');
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setShowThankYouModal(true);
+        form.reset();
+      } else {
+        console.error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
+  };
 
   const sectionVariant = {
     hidden: { opacity: 0, y: 20 },
@@ -66,57 +67,58 @@ const handleSubmit = async (e) => {
   };
 
   const skills = [
-    { name: "React e React Native", level: 90 },
-    { name: "Node.js", level: 85 },
-    { name: "UI/UX", level: 80 },
-    { name: "Java/Spring", level: 70 },
-    { name: "Flutter", level: 65 },
+    { name: "React/React Native", icon: <SiReact className="text-[#61DAFB]" size={24} /> },
+    { name: "Node.js", icon: <SiNodedotjs className="text-[#339933]" size={24} /> },
+    { name: "UI/UX Design", icon: <SiFigma className="text-[#F24E1E]" size={24} /> },
+    { name: "Java/Spring", icon: <div className="flex gap-2"><SiSpring className="text-[#6DB33F]" size={24} /></div> },
+    { name: "Flutter", icon: <SiFlutter className="text-[#02569B]" size={24} /> },
+    { name: "MySQL", icon: <SiMysql className="text-[#4479A1]" size={24} /> },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 font-sans overflow-x-hidden">
       {/* Modal de Agradecimento */}
       {showThankYouModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <motion.div 
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
-      transition={{ type: "spring", damping: 20 }}
-      className="bg-white rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-4 sm:p-6 md:p-8 relative shadow-2xl"
-    >
-      <button 
-        onClick={() => setShowThankYouModal(false)}
-        className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700"
-        aria-label="Fechar modal"
-      >
-        <FiX size={20} className="sm:w-6 sm:h-6" />
-      </button>
-      
-      <div className="text-center">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-          <svg className="w-8 h-8 sm:w-10 sm:w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-          </svg>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", damping: 20 }}
+            className="bg-white rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-4 sm:p-6 md:p-8 relative shadow-2xl"
+          >
+            <button 
+              onClick={() => setShowThankYouModal(false)}
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700"
+              aria-label="Fechar modal"
+            >
+              <FiX size={20} className="sm:w-6 sm:h-6" />
+            </button>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <svg className="w-8 h-8 sm:w-10 sm:w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">
+                Obrigado!
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                Sua mensagem foi enviada com sucesso. Entrarei em contato em breve.
+              </p>
+              
+              <button
+                onClick={() => setShowThankYouModal(false)}
+                className="px-4 py-2 sm:px-6 sm:py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base"
+              >
+                Fechar
+              </button>
+            </div>
+          </motion.div>
         </div>
-        
-        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">
-          Obrigado!
-        </h3>
-        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-          Sua mensagem foi enviada com sucesso. Entrarei em contato em breve.
-        </p>
-        
-        <button
-          onClick={() => setShowThankYouModal(false)}
-          className="px-4 py-2 sm:px-6 sm:py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base"
-        >
-          Fechar
-        </button>
-      </div>
-    </motion.div>
-  </div>
-)}
+      )}
 
       {/* Mobile Menu Button */}
       <button 
@@ -268,23 +270,18 @@ const handleSubmit = async (e) => {
             
             <motion.div variants={itemVariant}>
               <h3 className="text-xl font-semibold mb-4">Habilidades Principais:</h3>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {skills.map((skill, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-1">
-                      <span>{skill.name}</span>
-                      <span>{skill.level}%</span>
+                  <motion.div 
+                    key={index}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md border border-gray-100"
+                  >
+                    <div className="mb-2">
+                      {skill.icon}
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: index * 0.2 }}
-                        viewport={{ once: true }}
-                        className="h-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-                      />
-                    </div>
-                  </div>
+                    <span className="text-sm font-medium text-gray-700">{skill.name}</span>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -339,25 +336,21 @@ const handleSubmit = async (e) => {
                 </p>
                 
                 <div className="mb-6 md:mb-8">
-                  <h3 className="text-lg md:text-xl font-semibold mb-3">Principais Funcionalidades:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-indigo-600 mr-2">✓</span>
-                      <span>Perfis profissionais detalhados</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-600 mr-2">✓</span>
-                      <span>Sistema de match para colaborações</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-600 mr-2">✓</span>
-                      <span>Chat em tempo real</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-600 mr-2">✓</span>
-                      <span>Portfólio integrado</span>
-                    </li>
-                  </ul>
+                  <h3 className="text-lg md:text-xl font-semibold mb-3">Tecnologias Utilizadas:</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full">
+                      <SiReact className="text-[#61DAFB]" size={16} />
+                      <span className="text-sm">React</span>
+                    </div>
+                    <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full">
+                      <SiNodedotjs className="text-[#339933]" size={16} />
+                      <span className="text-sm">Node.js</span>
+                    </div>
+                    <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full">
+                      <SiMysql className="text-[#4479A1]" size={16} />
+                      <span className="text-sm">MySQL</span>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="flex flex-wrap gap-3">
@@ -417,9 +410,33 @@ const handleSubmit = async (e) => {
           {[
             {
               title: "Portfolio Template",
-              description: "Template React para portfólios criativos",
-              tags: ["React", "Tailwind CSS"]
-            }
+              description: "Template React para portfólio criativo com design moderno e responsivo.",
+              tags: ["React", "Tailwind CSS"],
+              icons: [
+                <SiReact key="react" className="text-[#61DAFB]" size={18} />,
+                <SiTailwindcss key="tailwind" className="text-[#06B6D4]" size={18} />
+              ]
+            },
+            // {
+            //   title: "Task Manager App",
+            //   description: "Aplicativo de gerenciamento de tarefas com autenticação e banco de dados.",
+            //   tags: ["React", "Node.js", "MySQL"],
+            //   icons: [
+            //     <SiReact key="react" className="text-[#61DAFB]" size={18} />,
+            //     <SiNodedotjs key="node" className="text-[#339933]" size={18} />,
+            //     <SiMysql key="mysql" className="text-[#4479A1]" size={18} />
+            //   ]
+            // },
+            // {
+            //   title: "E-commerce Platform",
+            //   description: "Plataforma de e-commerce com carrinho de compras e pagamento integrado.",
+            //   tags: ["React", "Java", "Spring"],
+            //   icons: [
+            //     <SiReact key="react" className="text-[#61DAFB]" size={18} />,
+            //     <SiOpenjdk key="java" className="text-[#007396]" size={18} />,
+            //     <SiSpring key="spring" className="text-[#6DB33F]" size={18} />
+            //   ]
+            // }
           ].map((project, index) => (
             <motion.div 
               key={index}
@@ -427,16 +444,16 @@ const handleSubmit = async (e) => {
               whileHover={{ y: -10 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100"
             >
-              <div className="h-40 md:h-48 bg-gradient-to-r from-purple-400 to-indigo-500">
+              <div className="h-40 md:h-48 bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center">
                 <img src="/Portfolio.png" alt="" />
               </div>
               <div className="p-4 md:p-6">
                 <h3 className="text-lg md:text-xl font-semibold mb-2">{project.title}</h3>
                 <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="px-2 py-0.5 md:px-3 md:py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">
-                      {tag}
+                <div className="flex gap-2 mb-3 md:mb-4">
+                  {project.icons.map((icon, i) => (
+                    <span key={i} className="p-1.5 bg-gray-100 rounded-full">
+                      {icon}
                     </span>
                   ))}
                 </div>
@@ -527,7 +544,6 @@ const handleSubmit = async (e) => {
             method="POST"
             onSubmit={handleSubmit}
           >
-            {/* Campos ocultos para configurar o FormSubmit */}
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
 
