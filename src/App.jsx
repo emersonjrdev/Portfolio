@@ -271,61 +271,87 @@ export default function Portfolio() {
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'tween', ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 bg-gradient-to-br from-indigo-900 to-purple-900 z-40 flex flex-col items-center justify-center md:hidden"
-          >
-            <nav className="flex flex-col items-center gap-8 text-white text-2xl">
-              {['sobre', 'projetos', 'contato'].map((item) => (
-                <motion.a
-                  key={item}
-                  href={`#${item}`}
-                  onClick={toggleMenu}
-                  className="relative overflow-hidden py-2"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 * ['sobre', 'projetos', 'contato'].indexOf(item) }}
-                >
-                  <span className="relative z-10 capitalize">{item}</span>
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.a>
-              ))}
-            </nav>
-            <motion.div
-              className="mt-12 flex gap-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+  {menuOpen && (
+    <motion.div
+      initial={{ x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={{ type: 'tween', ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 bg-gradient-to-br from-indigo-900 to-purple-900 z-40 flex flex-col items-center justify-center md:hidden"
+    >
+      {/* Botão de fechar (X) */}
+      <button 
+        onClick={toggleMenu}
+        className="absolute top-8 right-8 z-50 p-2 text-white hover:text-yellow-300 transition-colors"
+        aria-label="Fechar menu"
+      >
+        <FiX size={28} />
+      </button>
+
+      {/* Conteúdo do menu */}
+      <div className="flex flex-col items-center justify-center h-full w-full px-6">
+        <nav className="flex flex-col items-center gap-8 text-white text-2xl">
+          {['sobre', 'projetos', 'contato'].map((item) => (
+            <motion.a
+              key={item}
+              href={`#${item}`}
+              onClick={toggleMenu}
+              className="relative overflow-hidden py-2 group"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 * ['sobre', 'projetos', 'contato'].indexOf(item) }}
             >
-              {[
-                { icon: <FiLinkedin size={28} />, url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" },
-                { icon: <FiInstagram size={28} />, url: "https://www.instagram.com/emersxn_jr" },
-                { icon: <FiGithub size={28} />, url: "https://github.com/emersonjrdev" }
-              ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -5 }}
-                  className="text-white hover:text-yellow-300 transition"
-                >
-                  {social.icon}
-                </motion.a>
-              ))}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <span className="relative z-10 capitalize group-hover:text-yellow-300 transition-colors">
+                {item}
+              </span>
+              <motion.span
+                className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400"
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.a>
+          ))}
+        </nav>
+
+        {/* Ícones sociais */}
+        <motion.div
+          className="mt-12 flex gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          {[
+            { 
+              icon: <FiLinkedin size={28} />, 
+              url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" 
+            },
+            { 
+              icon: <FiInstagram size={28} />, 
+              url: "https://www.instagram.com/emersxn_jr" 
+            },
+            { 
+              icon: <FiGithub size={28} />, 
+              url: "https://github.com/emersonjrdev" 
+            }
+          ].map((social, index) => (
+            <motion.a
+              key={index}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -5, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-white hover:text-yellow-300 transition-colors p-2 rounded-full hover:bg-white/10"
+            >
+              {social.icon}
+            </motion.a>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
       {/* Header Section - Sem vídeo */}
       <header className="relative bg-gradient-to-br from-indigo-900 to-purple-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24">
@@ -446,7 +472,7 @@ export default function Portfolio() {
       {/* About Me Section - Com vídeo de fundo */}
       <section id="sobre" className="py-16 md:py-24 px-6 relative bg-white dark:bg-gray-900 overflow-hidden">
         {/* Video Background */}
-        <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute inset-0 overflow-hidden z-0 video-container">
   <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 to-purple-900/70 z-10"></div>
   <div className="absolute inset-0 w-full h-full">
     <ReactPlayer
