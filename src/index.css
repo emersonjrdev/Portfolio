@@ -2,119 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos do Slick Carousel - Tema Escuro */
-.dark .slick-slider {
+/* Estilos do Slick Carousel */
+.slick-slider {
   position: relative;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 0;
-  background-color: transparent;
 }
 
-.dark .slick-list {
+.slick-list {
   margin: 0 -15px;
   padding: 20px 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
-.dark .slick-slide > div {
+.slick-slide > div {
   padding: 0 15px;
   transition: all 0.3s ease;
+  outline: none;
 }
 
-.dark .slick-slide.slick-active > div {
-  transform: scale(1.05);
-}
-
-/* Dots de navegação - Tema Escuro */
-.dark .slick-dots {
+/* Dots de navegação */
+.slick-dots {
   bottom: -10px !important;
 }
 
-.dark .slick-dots li {
+.slick-dots li {
   margin: 0 4px !important;
 }
 
-.dark .slick-dots li button:before {
-  color: #4b5563 !important;
+.slick-dots li button:before {
+  color: #9ca3af !important;
   opacity: 1 !important;
   font-size: 10px !important;
 }
 
-.dark .slick-dots li.slick-active button:before {
-  color: #818cf8 !important;
+.slick-dots li.slick-active button:before {
+  color: #3b82f6 !important;
   font-size: 12px !important;
 }
 
-/* Setas de navegação - Tema Escuro */
-.dark .slick-arrow {
-  width: 50px !important;
-  height: 50px !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(10px);
-  border-radius: 50% !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: all 0.3s ease !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.dark .slick-arrow:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
-
-.dark .slick-arrow:before {
-  color: #e5e7eb !important;
-  font-size: 24px !important;
-  opacity: 0.8 !important;
-  transition: all 0.3s ease !important;
-  font-family: 'slick' !important;
-  line-height: 1 !important;
-}
-
-.dark .slick-arrow:hover:before {
-  opacity: 1 !important;
-}
-
-.dark .slick-prev {
-  left: -60px !important;
-}
-
-.dark .slick-next {
-  right: -60px !important;
-}
-
-/* Cards de projeto - Tema Escuro */
-.dark .project-card {
-  background: #1f2937;
+/* Cards de projeto */
+.project-card {
+  background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   height: 100%;
   display: flex !important;
   flex-direction: column;
-  border: 1px solid #374151;
+  border: 1px solid #e5e7eb;
 }
 
-.dark .project-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  border-color: #6366f1;
-}
-
-.dark .project-image-container {
+.project-image-container {
   position: relative;
   padding-top: 56.25%;
   overflow: hidden;
-  background: #111827;
+  background: #f3f4f6;
 }
 
-.dark .project-image {
+.project-image {
   position: absolute;
   top: 0;
   left: 0;
@@ -124,16 +73,49 @@
   transition: transform 0.5s ease;
 }
 
-.dark .project-card:hover .project-image {
-  transform: scale(1.05);
-}
-
-.dark .project-content {
+.project-content {
   padding: 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  color: #e5e7eb;
+}
+
+.project-content h3 {
+  color: #111827;
+}
+
+.project-content p {
+  color: #6b7280;
+}
+
+.project-content a {
+  color: #3b82f6;
+}
+
+.tag {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+/* Ajustes para o projeto mobile */
+.project-card[data-category="mobile"] .project-image-container {
+  padding-top: 100%;
+}
+
+.project-card[data-category="mobile"] .project-image {
+  object-fit: contain;
+  padding: 20px;
+  background-color: white;
+}
+
+/* Tema Escuro */
+.dark .project-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dark .project-image-container {
+  background: #111827;
 }
 
 .dark .project-content h3 {
@@ -145,10 +127,6 @@
 }
 
 .dark .project-content a {
-  color: #a5b4fc;
-}
-
-.dark .project-content a:hover {
   color: #818cf8;
 }
 
@@ -157,58 +135,37 @@
   color: #e5e7eb;
 }
 
-/* Responsividade */
-@media (max-width: 1024px) {
-  .dark .slick-prev {
-    left: -25px !important;
-  }
-  .dark .slick-next {
-    right: -25px !important;
-  }
+.dark .project-card[data-category="mobile"] .project-image {
+  background-color: #1f2937;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
-  .dark .slick-prev, 
-  .dark .slick-next {
-    display: none !important;
-  }
-  
-  .dark .slick-slide > div {
+  .slick-slide > div {
     padding: 0 10px;
   }
   
-  .dark .slick-list {
+  .slick-list {
     margin: 0 -10px;
   }
-}
-
-@media (max-width: 768px) {
-  .video-container video,
-  .video-container .react-player {
-    width: 100% !important;
-    height: auto !important;
-    min-height: 100%;
-    min-width: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  
+  .project-card[data-category="mobile"] .project-image-container {
+    padding-top: 120%;
   }
 }
 
-/* Adicione no seu arquivo CSS global */
-video {
+/* Video Background */
+.video-container video,
+.video-container .react-player {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 100%;
+  min-width: 100%;
   object-fit: cover;
-}
-
-/* Footer - Tema Escuro */
-.dark .footer-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Transição suave entre temas */
@@ -220,4 +177,99 @@ html.dark {
 .dark body {
   background-color: #111827;
   transition: background-color 0.3s ease;
+}
+
+/* Adicione estas regras ao seu CSS global */
+.project-card[data-category="mobile"] .project-image-container {
+  padding-top: 100%; /* Faz o container ser quadrado */
+  background-color: #f8fafc; /* Fundo claro padrão */
+}
+
+.dark .project-card[data-category="mobile"] .project-image-container {
+  background-color: #1e293b; /* Fundo escuro */
+}
+
+
+.project-card[data-category="mobile"] .project-image {
+  object-fit: contain;
+  padding: 1.5rem; /* Espaçamento interno */
+  transform: scale(0.7); /* Reduz um pouco o tamanho */
+  transition: transform 0.3s ease;
+}
+
+.project-card[data-category="mobile"]:hover .project-image {
+  transform: scale(0.95); /* Efeito sutil no hover */
+}
+
+/* Ajuste para telas pequenas */
+@media (max-width: 768px) {
+  .project-card[data-category="mobile"] .project-image-container {
+    padding-top: 120%; /* Mais altura para mobile */
+  }
+  
+  .project-card[data-category="mobile"] .project-image {
+    padding: 1rem;
+  }
+}
+
+/* Adicione ao seu CSS */
+.glow-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255,255,255,0.3),
+    rgba(255,255,255,0)
+  );
+  transform: rotate(30deg);
+  transition: all 0.5s ease;
+}
+
+.glow-button:hover::before {
+  left: 100%;
+  top: 100%;
+}
+
+.neon-effect {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5),
+              0 0 20px rgba(59, 130, 246, 0.3),
+              0 0 30px rgba(59, 130, 246, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .neon-effect {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7),
+              0 0 20px rgba(16, 185, 129, 0.5),
+              0 0 30px rgba(16, 185, 129, 0.3);
+}
+
+.social-icon {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.social-icon:hover {
+  transform: translateY(-5px) scale(1.1);
+  filter: drop-shadow(0 5px 10px rgba(251, 191, 36, 0.3));
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
