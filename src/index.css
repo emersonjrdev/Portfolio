@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos base melhorados */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply antialiased;
+}
+
+/* Focus styles para acessibilidade */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus {
+  @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+}
+
 /* Estilos do Slick Carousel */
 .slick-slider {
   position: relative;
@@ -189,7 +206,6 @@ html.dark {
   background-color: #1e293b; /* Fundo escuro */
 }
 
-
 .project-card[data-category="mobile"] .project-image {
   object-fit: contain;
   padding: 1.5rem; /* Espaçamento interno */
@@ -201,18 +217,7 @@ html.dark {
   transform: scale(0.95); /* Efeito sutil no hover */
 }
 
-/* Ajuste para telas pequenas */
-@media (max-width: 768px) {
-  .project-card[data-category="mobile"] .project-image-container {
-    padding-top: 120%; /* Mais altura para mobile */
-  }
-  
-  .project-card[data-category="mobile"] .project-image {
-    padding: 1rem;
-  }
-}
-
-/* Adicione ao seu CSS */
+/* Efeitos de hover e foco */
 .glow-button {
   position: relative;
   overflow: hidden;
@@ -261,6 +266,7 @@ html.dark {
   transform: translateY(-5px) scale(1.1);
   filter: drop-shadow(0 5px 10px rgba(251, 191, 36, 0.3));
 }
+
 .glass-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
@@ -272,4 +278,47 @@ html.dark {
 .dark .glass-card {
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Melhorias de acessibilidade para modo escuro */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+.high-contrast {
+  --tw-bg-opacity: 1;
+  background-color: rgba(0, 0, 0, var(--tw-bg-opacity)) !important;
+  color: rgba(255, 255, 255, var(--tw-text-opacity)) !important;
+}
+
+.high-contrast .text-gray-700 {
+  color: rgba(255, 255, 255, var(--tw-text-opacity)) !important;
+}
+
+.high-contrast .bg-white {
+  background-color: rgba(0, 0, 0, var(--tw-bg-opacity)) !important;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    font-weight: normal;
+  }
 }

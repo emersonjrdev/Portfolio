@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiGithub, FiExternalLink, FiArrowUp, FiLinkedin, FiInstagram, FiMail, FiUser, FiMessageSquare, FiX, FiSun, FiMoon, FiLoader } from "react-icons/fi";
-import { SiReact, SiNodedotjs, SiSpring, SiFlutter, SiTypescript, SiFigma, SiTailwindcss, SiNextdotjs } from "react-icons/si";
-import ReactPlayer from 'react-player';
-import { TypeAnimation } from 'react-type-animation';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import {
+  FiGithub,
+  FiExternalLink,
+  FiArrowUp,
+  FiLinkedin,
+  FiInstagram,
+  FiMail,
+  FiUser,
+  FiMessageSquare,
+  FiX,
+  FiSun,
+  FiMoon,
+  FiLoader,
+} from "react-icons/fi";
+import {
+  SiReact,
+  SiNodedotjs,
+  SiSpring,
+  SiFlutter,
+  SiTypescript,
+  SiFigma,
+  SiTailwindcss,
+  SiNextdotjs,
+} from "react-icons/si";
+import ReactPlayer from "react-player/lazy";
+import { TypeAnimation } from "react-type-animation";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import emailjs from '@emailjs/browser';
 
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
@@ -18,35 +41,41 @@ export default function Portfolio() {
   const [isLoading, setIsLoading] = useState(true);
   const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const formRef = useRef(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   // Simular loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2500);
+    }, 1800); // Reduzido para melhor experiência
     return () => clearTimeout(timer);
   }, []);
 
   // Verificar preferência do sistema para dark mode
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setDarkMode(isDark);
+    if (typeof window !== "undefined") {
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const savedMode = localStorage.getItem("darkMode");
+      setDarkMode(savedMode ? JSON.parse(savedMode) : isDark);
     }
   }, []);
 
   // Aplicar dark mode
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
-      document.body.classList.add('dark-mode');
+      document.documentElement.classList.add("dark");
+      document.body.classList.add("dark-mode");
     } else {
-      document.documentElement.classList.remove('dark');
-      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove("dark");
+      document.body.classList.remove("dark-mode");
     }
   }, [darkMode]);
 
@@ -61,7 +90,7 @@ export default function Portfolio() {
     adaptiveHeight: true,
     autoplay: true,
     autoplaySpeed: 5000,
-    cssEase: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+    cssEase: "cubic-bezier(0.645, 0.045, 0.355, 1)",
     responsive: [
       {
         breakpoint: 768,
@@ -69,10 +98,10 @@ export default function Portfolio() {
           slidesToShow: 1,
           slidesToScroll: 1,
           centerMode: false,
-          infinite: true
-        }
-      }
-    ]
+          infinite: true,
+        },
+      },
+    ],
   };
 
   // Efeitos de scroll
@@ -82,7 +111,7 @@ export default function Portfolio() {
       const totalHeight = document.body.scrollHeight - window.innerHeight;
       setScrollProgress((window.scrollY / totalHeight) * 100);
     };
-    
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -93,76 +122,76 @@ export default function Portfolio() {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+    if (!menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
   };
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    localStorage.setItem('darkMode', JSON.stringify(!darkMode));
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", JSON.stringify(newMode));
   };
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = 'Nome é obrigatório';
+    if (!formData.name.trim()) errors.name = "Nome é obrigatório";
     if (!formData.email.trim()) {
-      errors.email = 'Email é obrigatório';
+      errors.email = "Email é obrigatório";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Email inválido';
+      errors.email = "Email inválido";
     }
-    if (!formData.message.trim()) errors.message = 'Mensagem é obrigatória';
+    if (!formData.message.trim()) errors.message = "Mensagem é obrigatória";
     return errors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when typing
     if (formErrors[name]) {
-      setFormErrors(prev => ({
+      setFormErrors((prev) => ({
         ...prev,
-        [name]: null
+        [name]: null,
       }));
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const errors = validateForm();
 
-    const form = e.target;
-    const formData = new FormData(form);
+  if (Object.keys(errors).length > 0) {
+    setFormErrors(errors);
+    return;
+  }
 
-    try {
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+  setIsSubmitting(true);
+  setSubmitError(null);
 
-      if (response.ok) {
-        setShowThankYouModal(true);
-        form.reset();
-        setFormData({
-          name: '',
-          email: '',
-          message: ''
-        });
-      } else {
-        console.error('Form submission failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  try {
+    await emailjs.sendForm(
+      'service_b2z9q76', // Service ID
+      'template_0l66x1j', // Template ID (apenas o ID, não a URL)
+      formRef.current,    // Referência do formulário
+      'M2Oi0QCK_uZqjog2H' // Public Key
+    );
+
+    setShowThankYouModal(true);
+    setFormData({ name: "", email: "", message: "" });
+  } catch (error) {
+    console.error("Erro ao enviar:", error);
+    setSubmitError("Ocorreu um erro. Tente novamente mais tarde.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   // Animation variants
   const sectionVariant = {
@@ -173,9 +202,9 @@ export default function Portfolio() {
       transition: {
         duration: 0.8,
         ease: [0.1, 0.25, 0.3, 1],
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const itemVariant = {
@@ -185,95 +214,137 @@ export default function Portfolio() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   // Data
   const skills = [
-    { name: "React/React Native", icon: <SiReact className="text-[#61DAFB]" size={28} />, color: "from-[#61DAFB] to-[#2a93d5]" },
-    { name: "Node.js", icon: <SiNodedotjs className="text-[#339933]" size={28} />, color: "from-[#339933] to-[#1f6f1f]" },
-    { name: "UI/UX Design", icon: <SiFigma className="text-[#f24f1eee]" size={28} />, color: "from-[#F24E1E] to-[#f24f1e3f]" },
-    { name: "Java/Spring", icon: <SiSpring className="text-[#6DB33F]" size={28} />, color: "from-[#6DB33F] to-[#4a8a2a]" },
-    { name: "Flutter", icon: <SiFlutter className="text-[#02569B]" size={28} />, color: "from-[#02569B] to-[#013a6b]" },
-    { name: "TypeScript", icon: <SiTypescript className="text-[#3178C6]" size={28} />, color: "from-[#3178C6] to-[#1e56a3]" },
-    { name: "Tailwind CSS", icon: <SiTailwindcss className="text-[#06B6D4]" size={28} />, color: "from-[#06B6D4] to-[#0891B2]" },
-    { name: "Next.js", icon: <SiNextdotjs className="text-[#000000] dark:text-[#FFFFFF]" size={28} />, color: "from-[#000000] to-[#475569] dark:from-[#FFFFFF] dark:to-[#94A3B8]" },
+    {
+      name: "React/React Native",
+      icon: <SiReact className="text-[#61DAFB]" size={28} />,
+      color: "from-[#61DAFB] to-[#2a93d5]",
+    },
+    {
+      name: "Node.js",
+      icon: <SiNodedotjs className="text-[#339933]" size={28} />,
+      color: "from-[#339933] to-[#1f6f1f]",
+    },
+    {
+      name: "UI/UX Design",
+      icon: <SiFigma className="text-[#f24f1eee]" size={28} />,
+      color: "from-[#F24E1E] to-[#f24f1e3f]",
+    },
+    {
+      name: "Java/Spring",
+      icon: <SiSpring className="text-[#6DB33F]" size={28} />,
+      color: "from-[#6DB33F] to-[#4a8a2a]",
+    },
+    {
+      name: "Flutter",
+      icon: <SiFlutter className="text-[#02569B]" size={28} />,
+      color: "from-[#02569B] to-[#013a6b]",
+    },
+    {
+      name: "TypeScript",
+      icon: <SiTypescript className="text-[#3178C6]" size={28} />,
+      color: "from-[#3178C6] to-[#1e56a3]",
+    },
+    {
+      name: "Tailwind CSS",
+      icon: <SiTailwindcss className="text-[#06B6D4]" size={28} />,
+      color: "from-[#06B6D4] to-[#0891B2]",
+    },
+    {
+      name: "Next.js",
+      icon: (
+        <SiNextdotjs className="text-[#000000] dark:text-[#FFFFFF]" size={28} />
+      ),
+      color:
+        "from-[#000000] to-[#475569] dark:from-[#FFFFFF] dark:to-[#94A3B8]",
+    },
   ];
 
   const projects = [
     {
       id: 1,
       title: "ConnectWork",
-      description: "Plataforma profissional para conexão e colaboração entre freelancers e empresas com sistema de matchmaking inteligente.",
+      description:
+        "Plataforma profissional para conexão e colaboração entre freelancers e empresas com sistema de matchmaking inteligente.",
       tags: ["React", "Node.js", "MySQL", "Tailwind"],
       category: "web",
       image: "/connect.png",
       links: {
         demo: "https://connectwork.site",
-        code: "https://github.com/emersonjrdev"
+        code: "https://github.com/emersonjrdev",
       },
       metrics: "Aumentou engajamento em 40%",
       features: ["ChatBot", "Sistema de vagas"],
-      challenges: "Garantir a experiência entre empresas e alunos"
+      challenges: "Garantir a experiência entre empresas e alunos",
     },
     {
       id: 2,
       title: "Portfolio Moderno",
-      description: "Template de portfólio profissional com design responsivo, modo escuro/claro e animações fluidas.",
+      description:
+        "Template de portfólio profissional com design responsivo, modo escuro/claro e animações fluidas.",
       tags: ["React", "Tailwind CSS", "Framer Motion"],
       category: "web",
       image: "/Portfolio1.png",
       links: {
         demo: "https://emersondev.vercel.app",
-        code: "https://github.com/emersonjrdev"
+        code: "https://github.com/emersonjrdev",
       },
       metrics: "Melhorou conversão em 25%",
       features: ["Design responsivo", "Modo escuro/claro", "SEO otimizado"],
-      challenges: "Criar animações fluidas sem prejudicar performance"
+      challenges: "Criar animações fluidas sem prejudicar performance",
     },
     {
       id: 3,
       title: "ConnectWork App",
-      description: "Aplicativo móvel da plataforma ConnectWork com notificações em tempo real e chat integrado.",
+      description:
+        "Aplicativo móvel da plataforma ConnectWork com notificações em tempo real e chat integrado.",
       tags: ["React Native", "Node.js", "MySQL"],
       category: "mobile",
       image: "/Mobile.png",
       links: {
         demo: "#",
-        code: "https://github.com/emersonjrdev"
+        code: "https://github.com/emersonjrdev",
       },
       metrics: "4.8/5 avaliações na Play Store",
-      features: ["Notificações push", "Offline-first",],
-      challenges: "Garantir experiência consistente entre plataformas"
-    }
+      features: ["Notificações push", "Offline-first"],
+      challenges: "Garantir experiência consistente entre plataformas",
+    },
   ];
 
   const testimonials = [
     {
-      quote: "Trabalho excepcional! Entregou além do esperado com ótima comunicação e atenção aos detalhes.",
+      quote:
+        "Trabalho excepcional! Entregou além do esperado com ótima comunicação e atenção aos detalhes.",
       author: "João Souza",
       role: "CEO, TechSolutions",
-      avatar: "/avatar1.jpg"
+      avatar: "/avatar1.jpg",
     },
     {
-      quote: "Solução perfeita para nossas necessidades com ótimo custo-benefício e prazos cumpridos rigorosamente.",
+      quote:
+        "Solução perfeita para nossas necessidades com ótimo custo-benefício e prazos cumpridos rigorosamente.",
       author: "Maria Clara",
       role: "Gerente de Projetos, InovaCorp",
-      avatar: "/avatar2.jpg"
+      avatar: "/avatar2.jpg",
     },
     {
-      quote: "Profissional altamente qualificado e comprometido com os resultados. Superou todas as expectativas.",
+      quote:
+        "Profissional altamente qualificado e comprometido com os resultados. Superou todas as expectativas.",
       author: "Paulo Henrique",
       role: "CTO, DigitalMind",
-      avatar: "/avatar3.jpg"
-    }
+      avatar: "/avatar3.jpg",
+    },
   ];
 
-  const filteredProjects = activeFilter === "all"
-    ? projects
-    : projects.filter(project => project.category === activeFilter);
+  const filteredProjects =
+    activeFilter === "all"
+      ? projects
+      : projects.filter((project) => project.category === activeFilter);
 
   // Loading Screen
   if (isLoading) {
@@ -288,26 +359,26 @@ export default function Portfolio() {
           <motion.div
             animate={{
               rotate: 360,
-              scale: [1, 1.2, 1]
+              scale: [1, 1.2, 1],
             }}
             transition={{
               rotate: {
                 repeat: Infinity,
                 duration: 2,
-                ease: "linear"
+                ease: "linear",
               },
               scale: {
                 repeat: Infinity,
                 repeatType: "reverse",
                 duration: 1,
-                ease: "easeInOut"
-              }
+                ease: "easeInOut",
+              },
             }}
             className="mb-6"
           >
             <FiLoader className="text-amber-300" size={48} />
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -316,7 +387,7 @@ export default function Portfolio() {
           >
             Emerson Morales Jr
           </motion.h1>
-          
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -325,7 +396,7 @@ export default function Portfolio() {
           >
             Carregando portfólio...
           </motion.p>
-          
+
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "50%" }}
@@ -338,15 +409,25 @@ export default function Portfolio() {
   }
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} font-sans selection:bg-teal-500 selection:text-white transition-colors duration-300 overflow-x-hidden`}>
+    <div
+      className={`min-h-screen ${
+        darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
+      } font-sans selection:bg-teal-500 selection:text-white transition-colors duration-300 overflow-x-hidden`}
+    >
       {/* Scroll progress bar */}
-      <div className="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 z-50" 
-        style={{ width: `${scrollProgress}%` }} />
+      <div
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 z-50"
+        style={{ width: `${scrollProgress}%` }}
+      />
 
       {/* Dark Mode Toggle */}
-      <button 
+      <button
         onClick={toggleDarkMode}
-        className={`fixed top-8 left-8 p-2 rounded-full ${darkMode ? 'bg-white/10 text-amber-300' : 'bg-gray-900/10 text-gray-900'} backdrop-blur-sm z-50 hover:bg-white/20 transition-all shadow-lg`}
+        className={`fixed top-8 left-8 p-2 rounded-full ${
+          darkMode
+            ? "bg-white/10 text-amber-300"
+            : "bg-gray-900/10 text-gray-900"
+        } backdrop-blur-sm z-50 hover:bg-white/20 transition-all shadow-lg`}
         aria-label={darkMode ? "Light mode" : "Dark mode"}
       >
         {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
@@ -366,7 +447,11 @@ export default function Portfolio() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", damping: 20 }}
-              className={`${darkMode ? 'dark:bg-gray-800 dark:border-gray-700' : 'bg-white border-gray-100'} rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-6 md:p-8 relative shadow-2xl border`}
+              className={`${
+                darkMode
+                  ? "dark:bg-gray-800 dark:border-gray-700"
+                  : "bg-white border-gray-100"
+              } rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-6 md:p-8 relative shadow-2xl border`}
             >
               <button
                 onClick={() => setShowThankYouModal(false)}
@@ -381,28 +466,67 @@ export default function Portfolio() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2 }}
-                  className={`w-20 h-20 ${darkMode ? 'dark:bg-emerald-900/30' : 'bg-emerald-50'} rounded-full flex items-center justify-center mx-auto mb-6`}
+                  className={`w-20 h-20 ${
+                    darkMode ? "dark:bg-emerald-900/30" : "bg-emerald-50"
+                  } rounded-full flex items-center justify-center mx-auto mb-6`}
                 >
-                  <svg className="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  <svg
+                    className="w-10 h-10 text-emerald-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
                   </svg>
                 </motion.div>
 
-                <h3 className={`text-2xl md:text-3xl font-bold mb-3 ${darkMode ? 'dark:text-white' : 'text-gray-800'}`}>
+                <h3
+                  className={`text-2xl md:text-3xl font-bold mb-3 ${
+                    darkMode ? "dark:text-white" : "text-gray-800"
+                  }`}
+                >
                   Mensagem Enviada!
                 </h3>
-                <p className={`${darkMode ? 'dark:text-gray-300' : 'text-gray-600'} mb-6`}>
+                <p
+                  className={`${
+                    darkMode ? "dark:text-gray-300" : "text-gray-600"
+                  } mb-6`}
+                >
                   Obrigado pelo seu contato. Responderei o mais breve possível.
                 </p>
 
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowThankYouModal(false)}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all"
+                {/* <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                  className={`w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-bold hover:shadow-lg transition-all ${
+                    isSubmitting ? "opacity-80 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Fechar
-                </motion.button>
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <FiLoader className="animate-spin" />
+                      Enviando...
+                    </span>
+                  ) : (
+                    "Enviar Mensagem"
+                  )}
+                </motion.button> */}
+
+                {submitError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 text-red-500 text-center"
+                  >
+                    {submitError}
+                  </motion.p>
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -413,13 +537,13 @@ export default function Portfolio() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ x: '100%' }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'tween', ease: [0.76, 0, 0.24, 1] }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-0 bg-gradient-to-br from-teal-900 to-emerald-900 z-40 flex flex-col items-center justify-center md:hidden"
           >
-            <button 
+            <button
               onClick={toggleMenu}
               className="absolute top-8 right-8 z-50 p-2 text-white hover:text-amber-300 transition-colors"
               aria-label="Fechar menu"
@@ -429,7 +553,7 @@ export default function Portfolio() {
 
             <div className="flex flex-col items-center justify-center h-full w-full px-6">
               <nav className="flex flex-col items-center gap-8 text-white text-2xl">
-                {['sobre', 'projetos', 'contato'].map((item) => (
+                {["sobre", "projetos", "contato"].map((item) => (
                   <motion.a
                     key={item}
                     href={`#${item}`}
@@ -437,7 +561,10 @@ export default function Portfolio() {
                     className="relative overflow-hidden py-2 group"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.1 * ['sobre', 'projetos', 'contato'].indexOf(item) }}
+                    transition={{
+                      delay:
+                        0.1 * ["sobre", "projetos", "contato"].indexOf(item),
+                    }}
                   >
                     <span className="relative z-10 capitalize group-hover:text-amber-300 transition-colors">
                       {item}
@@ -459,18 +586,18 @@ export default function Portfolio() {
                 transition={{ delay: 0.4 }}
               >
                 {[
-                  { 
-                    icon: <FiLinkedin size={28} />, 
-                    url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" 
+                  {
+                    icon: <FiLinkedin size={28} />,
+                    url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/",
                   },
-                  { 
-                    icon: <FiInstagram size={28} />, 
-                    url: "https://www.instagram.com/emersxn_jr" 
+                  {
+                    icon: <FiInstagram size={28} />,
+                    url: "https://www.instagram.com/emersxn_jr",
                   },
-                  { 
-                    icon: <FiGithub size={28} />, 
-                    url: "https://github.com/emersonjrdev" 
-                  }
+                  {
+                    icon: <FiGithub size={28} />,
+                    url: "https://github.com/emersonjrdev",
+                  },
                 ].map((social, index) => (
                   <motion.a
                     key={index}
@@ -494,11 +621,12 @@ export default function Portfolio() {
       <header className="relative bg-gradient-to-br from-teal-900 to-emerald-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24">
         {/* Desktop Navigation */}
         <nav className="hidden md:flex absolute top-8 right-12 gap-8 text-white z-50">
-          {['sobre', 'projetos', 'contato'].map((item) => (
+          {["sobre", "projetos", "contato"].map((item) => (
             <a
               key={item}
               href={`#${item}`}
               className="relative group overflow-hidden py-1"
+              aria-label={`Ir para seção ${item}`}
             >
               <span className="capitalize">{item}</span>
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
@@ -507,12 +635,16 @@ export default function Portfolio() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           onClick={toggleMenu}
           className="md:hidden absolute top-8 right-6 z-50"
           aria-label="Menu"
         >
-          <div className={`w-6 flex flex-col gap-1.5 ${menuOpen ? 'opacity-0' : 'opacity-100'} transition-opacity`}>
+          <div
+            className={`w-6 flex flex-col gap-1.5 ${
+              menuOpen ? "opacity-0" : "opacity-100"
+            } transition-opacity`}
+          >
             <span className="h-0.5 w-full bg-white"></span>
             <span className="h-0.5 w-full bg-white"></span>
             <span className="h-0.5 w-full bg-white"></span>
@@ -531,18 +663,19 @@ export default function Portfolio() {
               src="/foto-pessoal.jpeg"
               alt="Emerson Morales"
               className="w-full h-full object-cover object-center"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-teal-600/20 mix-blend-overlay"></div>
           </div>
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
+              rotate: [0, 5, -5, 0],
             }}
             transition={{
               repeat: Infinity,
               duration: 3,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="absolute -bottom-2 -right-2 bg-amber-400 text-teal-900 px-3 py-1 rounded-full text-xs font-bold shadow-md"
           >
@@ -559,20 +692,20 @@ export default function Portfolio() {
           >
             <TypeAnimation
               sequence={[
-                'Emerson Morales Jr',
+                "Emerson Morales Jr",
                 1000,
-                'Desenvolvedor Full Stack',
+                "Desenvolvedor Full Stack",
                 1000,
-                'UI/UX Designer',
+                "UI/UX Designer",
                 1000,
                 () => {
-                  console.log('Animação completa');
-                }
+                  console.log("Animação completa");
+                },
               ]}
               wrapper="h1"
               cursor={true}
               repeat={Infinity}
-              style={{ display: 'inline-block' }}
+              style={{ display: "inline-block" }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-2 bg-gradient-to-r from-amber-300 to-yellow-400 bg-clip-text text-transparent"
               deletionSpeed={70}
             />
@@ -583,7 +716,10 @@ export default function Portfolio() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl opacity-90 mb-6"
             >
-              Criando soluções digitais com <span className="font-semibold text-amber-300">React</span>, <span className="font-semibold text-amber-300">Node.js</span> e <span className="font-semibold text-amber-300">Design</span>
+              Criando soluções digitais com{" "}
+              <span className="font-semibold text-amber-300">React</span>,{" "}
+              <span className="font-semibold text-amber-300">Node.js</span> e{" "}
+              <span className="font-semibold text-amber-300">Design</span>
             </motion.p>
 
             <motion.div
@@ -618,7 +754,10 @@ export default function Portfolio() {
       </header>
 
       {/* About Me Section */}
-      <section id="sobre" className="py-16 md:py-24 px-6 relative bg-white dark:bg-gray-900 overflow-hidden">
+      <section
+        id="sobre"
+        className="py-16 md:py-24 px-6 relative bg-white dark:bg-gray-900 overflow-hidden"
+      >
         {/* Video Background */}
         <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-900/70 to-emerald-900/70 z-10"></div>
@@ -630,23 +769,25 @@ export default function Portfolio() {
             width="100%"
             height="100%"
             style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              minWidth: '100%',
-              minHeight: '100%',
-              objectFit: 'cover',
-              opacity: 0.3
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              minWidth: "100%",
+              minHeight: "100%",
+              objectFit: "cover",
+              opacity: isVideoLoaded ? 0.3 : 0,
+              transition: "opacity 1s ease",
             }}
+            onReady={() => setIsVideoLoaded(true)}
             config={{
               file: {
                 attributes: {
                   style: {
-                    objectFit: 'cover'
-                  }
-                }
-              }
+                    objectFit: "cover",
+                  },
+                },
+              },
             }}
           />
         </div>
@@ -658,6 +799,7 @@ export default function Portfolio() {
             src="/coding-bg.png"
             alt="Background"
             className="w-full h-full object-cover opacity-30"
+            loading="lazy"
           />
         </div>
 
@@ -670,11 +812,11 @@ export default function Portfolio() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-12 md:mb-16 text-center text-gray-900 dark:text-white"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-12 md:mb-16 text-center text-gray-800 dark:text-white"
           >
             <span className="relative inline-block">
               <span className="relative z-10">Sobre Mim</span>
-              <span className="absolute bottom-1 left-0 w-full h-3 bg-teal-200/60 dark:bg-teal-800/60 z-0"></span>
+              <span className="absolute bottom-1 left-0 w-full h-3 bg-teal-500/60 dark:bg-teal-800/60 z-0"></span>
             </span>
           </motion.h2>
 
@@ -688,20 +830,35 @@ export default function Portfolio() {
             <div>
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-700 dark:text-gray-200 mb-6"
+                className="text-lg leading-relaxed text-gray-200 dark:text-gray-200 mb-6"
               >
-                Sou um <span className="font-semibold text-teal-600 dark:text-teal-400">Desenvolvedor Full Stack</span> com experiência em criar soluções digitais completas, desde o design até a implementação. Minha paixão é transformar ideias em produtos funcionais e elegantes que proporcionam excelentes experiências aos usuários.
+                Sou um{" "}
+                <span className="font-semibold text-teal-600 dark:text-teal-400">
+                  Desenvolvedor Full Stack
+                </span>{" "}
+                com experiência em criar soluções digitais completas, desde o
+                design até a implementação. Minha paixão é transformar ideias em
+                produtos funcionais e elegantes que proporcionam excelentes
+                experiências aos usuários.
               </motion.p>
 
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-8 md:mb-10"
+                className="text-lg leading-relaxed text-gray-200 dark:text-gray-300 mb-8 md:mb-10"
               >
-                Com background em desenvolvimento web e mobile, trabalho com tecnologias modernas como <span className="font-medium text-teal-600 dark:text-teal-400">React, Node.js, Flutter e Spring Boot</span>. Acredito na combinação de código limpo, boas práticas e design atencioso para criar soluções escaláveis e eficientes.
+                Com background em desenvolvimento web e mobile, trabalho com
+                tecnologias modernas como{" "}
+                <span className="font-medium text-teal-600 dark:text-teal-400">
+                  React, Node.js, Flutter e Spring Boot
+                </span>
+                . Acredito na combinação de código limpo, boas práticas e design
+                atencioso para criar soluções escaláveis e eficientes.
               </motion.p>
 
               <motion.div variants={itemVariant}>
-                <h3 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Habilidades:</h3>
+                <h3 className="text-xl font-semibold mb-6 text-gray-200 dark:text-gray-200">
+                  Habilidades:
+                </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {skills.map((skill, index) => (
                     <motion.div
@@ -710,12 +867,14 @@ export default function Portfolio() {
                       whileHover={{ y: -5 }}
                       className="group relative overflow-hidden p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700"
                     >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}></div>
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
+                      ></div>
                       <div className="flex flex-col items-center">
-                        <div className="mb-3">
-                          {skill.icon}
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-white transition-colors">{skill.name}</span>
+                        <div className="mb-3">{skill.icon}</div>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-white transition-colors">
+                          {skill.name}
+                        </span>
                       </div>
                     </motion.div>
                   ))}
@@ -727,32 +886,51 @@ export default function Portfolio() {
               variants={itemVariant}
               className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700"
             >
-              <h3 className="text-2xl font-semibold mb-6 text-center text-teal-600 dark:text-teal-400">Experiência</h3>
+              <h3 className="text-2xl font-semibold mb-6 text-center text-teal-600 dark:text-teal-400">
+                Experiência
+              </h3>
               <div className="space-y-8">
                 <div className="relative pl-10 border-l-2 border-teal-200 dark:border-teal-800 group">
                   <div className="absolute -left-1 top-0 w-3 h-3 rounded-full bg-teal-500 group-hover:bg-gradient-to-r from-teal-500 to-emerald-500 transition-all"></div>
-                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">Desenvolvedor Full Stack</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Freelancer | 2021 - Presente</p>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">
+                    Desenvolvedor Full Stack
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    Freelancer | 2021 - Presente
+                  </p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Desenvolvimento de aplicações web e mobile completas, desde o design UI/UX até a implementação de APIs e deploy em produção.
+                    Desenvolvimento de aplicações web e mobile completas, desde
+                    o design UI/UX até a implementação de APIs e deploy em
+                    produção.
                   </p>
                 </div>
 
                 <div className="relative pl-10 border-l-2 border-teal-200 dark:border-teal-800 group">
                   <div className="absolute -left-1 top-0 w-3 h-3 rounded-full bg-teal-500 group-hover:bg-gradient-to-r from-teal-500 to-emerald-500 transition-all"></div>
-                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">Desenvolvedor Mobile</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Projetos Pessoais | 2020 - 2021</p>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">
+                    Desenvolvedor Mobile
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    Projetos Pessoais | 2020 - 2021
+                  </p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Criação de aplicativos multiplataforma com React Native e Flutter, com integração a APIs REST e serviços em nuvem.
+                    Criação de aplicativos multiplataforma com React Native e
+                    Flutter, com integração a APIs REST e serviços em nuvem.
                   </p>
                 </div>
 
                 <div className="relative pl-10 border-l-2 border-teal-200 dark:border-teal-800 group">
                   <div className="absolute -left-1 top-0 w-3 h-3 rounded-full bg-teal-500 group-hover:bg-gradient-to-r from-teal-500 to-emerald-500 transition-all"></div>
-                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">UI/UX Designer</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Freelancer | 2019 - 2020</p>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">
+                    UI/UX Designer
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    Freelancer | 2019 - 2020
+                  </p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Design de interfaces e experiências de usuário para aplicativos e websites, criando protótipos e sistemas de design.
+                    Design de interfaces e experiências de usuário para
+                    aplicativos e websites, criando protótipos e sistemas de
+                    design.
                   </p>
                 </div>
               </div>
@@ -764,7 +942,7 @@ export default function Portfolio() {
       {/* Metrics Section */}
       <section className="py-12 bg-emerald-700 text-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -774,8 +952,8 @@ export default function Portfolio() {
             <p className="text-4xl font-bold mb-2">8+</p>
             <p>Projetos Completos</p>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -785,8 +963,8 @@ export default function Portfolio() {
             <p className="text-4xl font-bold mb-2">100%</p>
             <p>Satisfação do Cliente</p>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -800,9 +978,12 @@ export default function Portfolio() {
       </section>
 
       {/* Projects Section */}
-      <section id="projetos" className="py-16 bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 relative">
+      <section
+        id="projetos"
+        className="py-16 bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 relative"
+      >
         <div className="max-w-7xl mx-auto">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -813,17 +994,28 @@ export default function Portfolio() {
 
           <div className="flex justify-center mb-10">
             <div className="inline-flex bg-white dark:bg-gray-700 rounded-full p-1 shadow">
-              {['all', 'web', 'mobile'].map((filter) => (
+              {["all", "web", "mobile"].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
                   className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
                     activeFilter === filter
-                      ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white'
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                      ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+                  aria-label={`Filtrar projetos por ${
+                    filter === "all"
+                      ? "todos"
+                      : filter === "web"
+                      ? "web"
+                      : "mobile"
                   }`}
                 >
-                  {filter === 'all' ? 'Todos' : filter === 'web' ? 'Web' : 'Mobile'}
+                  {filter === "all"
+                    ? "Todos"
+                    : filter === "web"
+                    ? "Web"
+                    : "Mobile"}
                 </button>
               ))}
             </div>
@@ -833,45 +1025,69 @@ export default function Portfolio() {
             <Slider {...sliderSettings}>
               {filteredProjects.map((project) => (
                 <div key={project.id} className="px-2 outline-none">
-                  <motion.div 
+                  <motion.div
                     className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden border border-gray-100 dark:border-gray-600 mx-auto max-w-md"
                     whileHover={{ y: -5 }}
                     data-category={project.category}
                   >
-                    <div className={`
+                    <div
+                      className={`
                       relative overflow-hidden 
-                      ${project.category === 'mobile' ? 'pt-[100%] bg-gray-50 dark:bg-gray-800' : 'pt-[56.25%] bg-gray-200 dark:bg-gray-600'}
-                    `}>
+                      ${
+                        project.category === "mobile"
+                          ? "pt-[100%] bg-gray-50 dark:bg-gray-800"
+                          : "pt-[56.25%] bg-gray-200 dark:bg-gray-600"
+                      }
+                    `}
+                    >
                       <img
                         src={project.image}
                         alt={project.title}
                         className={`
                           absolute top-0 left-0 w-full h-full 
-                          ${project.category === 'mobile' ? 'object-contain p-6' : 'object-cover'}
+                          ${
+                            project.category === "mobile"
+                              ? "object-contain p-6"
+                              : "object-cover"
+                          }
                         `}
+                        loading="lazy"
                       />
                     </div>
                     <div className="p-5">
-                      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{project.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
-                      
+                      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 mb-4">
+                        {project.description}
+                      </p>
+
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Principais recursos:</h4>
+                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Principais recursos:
+                        </h4>
                         <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-1">
                           {project.features.map((feature, i) => (
                             <li key={i}>{feature}</li>
                           ))}
                         </ul>
                       </div>
-                      
+
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Desafios:</h4>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">{project.challenges}</p>
+                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Desafios:
+                        </h4>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                          {project.challenges}
+                        </p>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-2 mb-3">
                         {project.tags.map((tag) => (
-                          <span key={tag} className="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded">
+                          <span
+                            key={tag}
+                            className="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded"
+                          >
                             {tag}
                           </span>
                         ))}
@@ -881,10 +1097,20 @@ export default function Portfolio() {
                           {project.metrics}
                         </div>
                         <div className="flex gap-4">
-                          <a href={project.links.demo} className="text-teal-600 dark:text-teal-400 hover:underline flex items-center text-sm">
+                          <a
+                            href={project.links.demo}
+                            className="text-teal-600 dark:text-teal-400 hover:underline flex items-center text-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <FiExternalLink className="mr-1" /> Demo
                           </a>
-                          <a href={project.links.code} className="text-gray-600 dark:text-gray-400 hover:underline flex items-center text-sm">
+                          <a
+                            href={project.links.code}
+                            className="text-gray-600 dark:text-gray-400 hover:underline flex items-center text-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <FiGithub className="mr-1" /> Código
                           </a>
                         </div>
@@ -926,20 +1152,36 @@ export default function Portfolio() {
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold mr-3 overflow-hidden">
                     {testimonial.avatar ? (
-                      <img src={testimonial.avatar} alt={testimonial.author} className="w-full h-full object-cover" />
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.author}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                     ) : (
                       testimonial.author.charAt(0)
                     )}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 dark:text-white">{testimonial.author}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
+                    <p className="font-bold text-gray-800 dark:text-white">
+                      {testimonial.author}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
-                <p className="italic text-gray-700 dark:text-gray-300">"{testimonial.quote}"</p>
+                <p className="italic text-gray-700 dark:text-gray-300">
+                  "{testimonial.quote}"
+                </p>
                 <div className="mt-4 flex">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-amber-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
@@ -951,7 +1193,10 @@ export default function Portfolio() {
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="py-16 bg-gray-50 dark:bg-gray-800 px-6 relative">
+      <section
+        id="contato"
+        className="py-16 bg-gray-50 dark:bg-gray-800 px-6 relative"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="absolute -right-20 top-1/3 w-60 h-60 bg-emerald-500 rounded-full filter blur-3xl opacity-10 dark:opacity-5 -z-10"></div>
 
@@ -987,19 +1232,20 @@ export default function Portfolio() {
                 variants={itemVariant}
                 className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-8"
               >
-                Estou disponível para oportunidades de freelance e colaborações. Se você tem uma ideia ou projeto em mente, ou simplesmente quer bater um papo, sinta-se à vontade para entrar em contato.
+                Estou disponível para oportunidades de freelance e colaborações.
+                Se você tem uma ideia ou projeto em mente, ou simplesmente quer
+                bater um papo, sinta-se à vontade para entrar em contato.
               </motion.p>
 
-              <motion.div
-                variants={itemVariant}
-                className="space-y-4"
-              >
+              <motion.div variants={itemVariant} className="space-y-4">
                 <div className="flex items-start">
                   <div className="bg-teal-100 dark:bg-teal-900/30 p-3 rounded-full mr-4 flex-shrink-0">
                     <FiMail className="text-teal-600 dark:text-teal-400 text-xl" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Email
+                    </p>
                     <a
                       href="mailto:contato.juniormorales@gmail.com"
                       className="text-lg font-medium hover:text-teal-600 dark:hover:text-teal-400 transition-colors text-gray-700 dark:text-gray-300"
@@ -1014,9 +1260,11 @@ export default function Portfolio() {
                     <FiLinkedin className="text-teal-600 dark:text-teal-400 text-xl" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">LinkedIn</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      LinkedIn
+                    </p>
                     <a
-                      href="https://www.linkedin.com/in/emerson-morales-junior/"
+                      href="https://www.linkedin.com/in/emerson-morales-junior-6469b8231/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-lg font-medium hover:text-teal-600 dark:hover:text-teal-400 transition-colors text-gray-700 dark:text-gray-300"
@@ -1031,7 +1279,9 @@ export default function Portfolio() {
                     <FiGithub className="text-teal-600 dark:text-teal-400 text-xl" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">GitHub</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      GitHub
+                    </p>
                     <a
                       href="https://github.com/emersonjrdev"
                       target="_blank"
@@ -1048,16 +1298,16 @@ export default function Portfolio() {
             <motion.form
               variants={itemVariant}
               className="bg-white dark:bg-gray-700 p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-600"
-              action="https://formsubmit.co/contato.juniormorales@gmail.com"
-              method="POST"
               onSubmit={handleSubmit}
+              ref={formRef}
             >
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_next" value="https://yourdomain.com/thanks" />
-
               <div className="mb-6">
-                <label htmlFor="name" className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">Nome</label>
+                <label
+                  htmlFor="name"
+                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                >
+                  Nome
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FiUser className="text-gray-400" />
@@ -1069,15 +1319,31 @@ export default function Portfolio() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${formErrors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                    className={`w-full pl-10 pr-4 py-3 border ${
+                      formErrors.name
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-gray-600"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
                     placeholder="Seu nome completo"
+                    aria-describedby={
+                      formErrors.name ? "name-error" : undefined
+                    }
                   />
                 </div>
-                {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
+                {formErrors.name && (
+                  <p id="name-error" className="text-red-500 text-sm mt-1">
+                    {formErrors.name}
+                  </p>
+                )}
               </div>
 
               <div className="mb-6">
-                <label htmlFor="email" className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">Email</label>
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                >
+                  Email
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FiMail className="text-gray-400" />
@@ -1089,15 +1355,31 @@ export default function Portfolio() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${formErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                    className={`w-full pl-10 pr-4 py-3 border ${
+                      formErrors.email
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-gray-600"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
                     placeholder="seu@email.com"
+                    aria-describedby={
+                      formErrors.email ? "email-error" : undefined
+                    }
                   />
                 </div>
-                {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                {formErrors.email && (
+                  <p id="email-error" className="text-red-500 text-sm mt-1">
+                    {formErrors.email}
+                  </p>
+                )}
               </div>
 
               <div className="mb-6">
-                <label htmlFor="message" className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">Mensagem</label>
+                <label
+                  htmlFor="message"
+                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                >
+                  Mensagem
+                </label>
                 <div className="relative">
                   <div className="absolute top-3 left-3">
                     <FiMessageSquare className="text-gray-400" />
@@ -1109,11 +1391,22 @@ export default function Portfolio() {
                     rows="5"
                     value={formData.message}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${formErrors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                    className={`w-full pl-10 pr-4 py-3 border ${
+                      formErrors.message
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-gray-600"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
                     placeholder="Conte-me sobre seu projeto..."
+                    aria-describedby={
+                      formErrors.message ? "message-error" : undefined
+                    }
                   ></textarea>
                 </div>
-                {formErrors.message && <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>}
+                {formErrors.message && (
+                  <p id="message-error" className="text-red-500 text-sm mt-1">
+                    {formErrors.message}
+                  </p>
+                )}
               </div>
 
               <motion.button
@@ -1134,7 +1427,9 @@ export default function Portfolio() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
             <div className="text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-4">Pronto para transformar sua ideia em realidade?</h3>
+              <h3 className="text-2xl font-bold mb-4">
+                Pronto para transformar sua ideia em realidade?
+              </h3>
               <motion.a
                 href="#contato"
                 whileHover={{ scale: 1.05 }}
@@ -1144,21 +1439,21 @@ export default function Portfolio() {
                 Vamos Conversar
               </motion.a>
             </div>
-            
+
             <div className="flex gap-6">
               {[
-                { 
-                  icon: <FiLinkedin size={24} />, 
-                  url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/" 
+                {
+                  icon: <FiLinkedin size={24} />,
+                  url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/",
                 },
-                { 
-                  icon: <FiInstagram size={24} />, 
-                  url: "https://www.instagram.com/emersxn_jr" 
+                {
+                  icon: <FiInstagram size={24} />,
+                  url: "https://www.instagram.com/emersxn_jr",
                 },
-                { 
-                  icon: <FiGithub size={24} />, 
-                  url: "https://github.com/emersonjrdev" 
-                }
+                {
+                  icon: <FiGithub size={24} />,
+                  url: "https://github.com/emersonjrdev",
+                },
               ].map((social, index) => (
                 <motion.a
                   key={index}
@@ -1168,17 +1463,25 @@ export default function Portfolio() {
                   whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className="text-white hover:text-amber-300 transition-colors p-2 rounded-full hover:bg-white/10"
+                  aria-label={
+                    social.icon.type === FiLinkedin
+                      ? "LinkedIn"
+                      : social.icon.type === FiInstagram
+                      ? "Instagram"
+                      : "GitHub"
+                  }
                 >
                   {social.icon}
                 </motion.a>
               ))}
             </div>
           </div>
-          
+
           <div className="border-t border-white/20 w-full pt-8 text-center">
             <p className="text-lg mb-2">Vamos criar algo incrível juntos!</p>
             <p className="text-sm opacity-80">
-              © {new Date().getFullYear()} Emerson Morales Junior. Todos os direitos reservados.
+              © {new Date().getFullYear()} Emerson Morales Junior. Todos os
+              direitos reservados.
             </p>
           </div>
         </div>
@@ -1193,7 +1496,7 @@ export default function Portfolio() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            whileHover={{ scale: 1.1, backgroundColor: '#059669' }}
+            whileHover={{ scale: 1.1, backgroundColor: "#059669" }}
             whileTap={{ scale: 0.95 }}
             className="fixed bottom-8 right-8 bg-teal-600 text-white p-3 rounded-full shadow-xl hover:shadow-2xl transition-all z-40"
           >
