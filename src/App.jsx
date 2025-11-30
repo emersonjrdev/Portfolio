@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   FiGithub,
   FiExternalLink,
@@ -13,6 +13,9 @@ import {
   FiSun,
   FiMoon,
   FiLoader,
+  FiCode,
+  FiZap,
+  FiTrendingUp,
 } from "react-icons/fi";
 import {
   SiReact,
@@ -30,6 +33,98 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emailjs from '@emailjs/browser';
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+
+// Componente de contador animado
+function CounterCard({ metric, delay }) {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const duration = 2000;
+    const steps = 60;
+    const increment = metric.value / steps;
+    const stepDuration = duration / steps;
+
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= metric.value) {
+        setCount(metric.value);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, stepDuration);
+
+    return () => clearInterval(timer);
+  }, [isVisible, metric.value]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.5 }}
+      whileHover={{ scale: 1.05, y: -5 }}
+      className="p-8 backdrop-blur-md bg-white/10 dark:bg-gray-800/50 rounded-2xl hover:bg-white/20 dark:hover:bg-gray-700/50 transition-all border border-white/20 dark:border-gray-700 shadow-xl relative overflow-hidden group"
+    >
+      {/* Efeito de brilho no hover */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        initial={{ x: "-100%" }}
+        whileHover={{ x: "100%" }}
+        transition={{ duration: 0.6 }}
+      />
+      
+      <div className="relative z-10">
+        <motion.div
+          className="text-amber-300 mb-4 flex justify-center"
+          whileHover={{ rotate: 360, scale: 1.2 }}
+          transition={{ duration: 0.5 }}
+        >
+          {metric.icon}
+        </motion.div>
+        <motion.p
+          className="text-5xl md:text-6xl font-extrabold mb-2 bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent"
+          key={count}
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          {count}{metric.suffix}
+        </motion.p>
+        <p className="text-lg opacity-90">{metric.label}</p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
@@ -50,14 +145,106 @@ export default function Portfolio() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState("default");
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   // Simular loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1800); // Reduzido para melhor experiência
+    }, 1800);
     return () => clearTimeout(timer);
   }, []);
+
+  // Mouse tracking para efeitos interativos
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Configuração de partículas
+  const particlesInit = async (main) => {
+    await loadFull(main);
+  };
+
+  const particlesOptions = {
+    background: {
+      color: {
+        value: "transparent",
+      },
+    },
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onClick: {
+          enable: true,
+          mode: "push",
+        },
+        onHover: {
+          enable: true,
+          mode: "repulse",
+        },
+        resize: true,
+      },
+      modes: {
+        push: {
+          quantity: 4,
+        },
+        repulse: {
+          distance: 200,
+          duration: 0.4,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: "#14b8a6",
+      },
+      links: {
+        color: "#14b8a6",
+        distance: 150,
+        enable: true,
+        opacity: 0.3,
+        width: 1,
+      },
+      collisions: {
+        enable: true,
+      },
+      move: {
+        direction: "none",
+        enable: true,
+        outModes: {
+          default: "bounce",
+        },
+        random: false,
+        speed: 1,
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800,
+        },
+        value: 50,
+      },
+      opacity: {
+        value: 0.5,
+      },
+      shape: {
+        type: "circle",
+      },
+      size: {
+        value: { min: 1, max: 3 },
+      },
+    },
+    detectRetina: true,
+  };
 
   // Verificar preferência do sistema para dark mode
   useEffect(() => {
@@ -412,12 +599,39 @@ export default function Portfolio() {
     <div
       className={`min-h-screen ${
         darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
-      } font-sans selection:bg-teal-500 selection:text-white transition-colors duration-300 overflow-x-hidden`}
+      } font-sans selection:bg-teal-500 selection:text-white transition-colors duration-300 overflow-x-hidden relative`}
     >
-      {/* Scroll progress bar */}
-      <div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 z-50"
+      {/* Partículas de fundo */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          options={particlesOptions}
+          className="w-full h-full"
+        />
+      </div>
+
+      {/* Cursor personalizado */}
+      <motion.div
+        className="fixed top-0 left-0 w-6 h-6 bg-teal-500 rounded-full pointer-events-none z-[100] mix-blend-difference"
+        animate={{
+          x: mousePosition.x - 12,
+          y: mousePosition.y - 12,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 28,
+        }}
+      />
+
+      {/* Scroll progress bar melhorado */}
+      <motion.div
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-500 z-50 shadow-lg"
         style={{ width: `${scrollProgress}%` }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.3 }}
       />
 
       {/* Dark Mode Toggle */}
@@ -617,20 +831,43 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
 
-      {/* Header Section */}
-      <header className="relative bg-gradient-to-br from-teal-900 to-emerald-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24">
-        {/* Desktop Navigation */}
+      {/* Header Section - Melhorado */}
+      <header 
+        ref={heroRef}
+        className="relative bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
+      >
+        {/* Efeito de gradiente animado */}
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 via-emerald-600/20 to-teal-600/20 animate-gradient-xy"></div>
+        
+        {/* Grid pattern de fundo */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}></div>
+        </div>
+
+        {/* Desktop Navigation - Melhorado */}
         <nav className="hidden md:flex absolute top-8 right-12 gap-8 text-white z-50">
           {["sobre", "projetos", "contato"].map((item) => (
-            <a
+            <motion.a
               key={item}
               href={`#${item}`}
-              className="relative group overflow-hidden py-1"
+              className="relative group overflow-hidden py-2 px-4 rounded-full backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-all"
               aria-label={`Ir para seção ${item}`}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <span className="capitalize">{item}</span>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-            </a>
+              <span className="capitalize relative z-10 font-medium">{item}</span>
+              <motion.span
+                className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full"
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.3 }}
+                style={{ originX: 0 }}
+              />
+            </motion.a>
           ))}
         </nav>
 
@@ -651,25 +888,60 @@ export default function Portfolio() {
           </div>
         </button>
 
-        {/* Profile Image */}
+        {/* Profile Image - Melhorado com efeitos 3D */}
         <motion.div
-          initial={{ scale: 0, rotate: -15 }}
-          animate={{ scale: 1, rotate: 0 }}
+          initial={{ scale: 0, rotate: -15, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-          className="relative mb-8 md:mb-0 md:mr-12 z-10 w-32 h-32 md:w-40 md:h-40"
+          className="relative mb-8 md:mb-0 md:mr-12 z-10 w-40 h-40 md:w-56 md:h-56"
+          whileHover={{ scale: 1.05, rotate: 5 }}
         >
-          <div className="w-full h-full rounded-full overflow-hidden shadow-2xl border-4 border-white/20 relative">
+          {/* Anel animado ao redor */}
+          <motion.div
+            className="absolute inset-0 rounded-full border-4 border-amber-400/50"
+            animate={{
+              rotate: 360,
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              rotate: {
+                repeat: Infinity,
+                duration: 20,
+                ease: "linear",
+              },
+              scale: {
+                repeat: Infinity,
+                duration: 2,
+                ease: "easeInOut",
+              },
+            }}
+          />
+          
+          <div className="w-full h-full rounded-full overflow-hidden shadow-2xl border-4 border-white/30 relative backdrop-blur-sm">
             <img
               src="/foto-pessoal.jpeg"
               alt="Emerson Morales"
               className="w-full h-full object-cover object-center"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-teal-600/20 mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-600/30 to-emerald-600/30 mix-blend-overlay"></div>
+            {/* Efeito de brilho */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              animate={{
+                x: ['-100%', '100%'],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 3,
+                ease: "linear",
+              }}
+            />
           </div>
+          
           <motion.div
             animate={{
-              scale: [1, 1.1, 1],
+              scale: [1, 1.15, 1],
               rotate: [0, 5, -5, 0],
             }}
             transition={{
@@ -677,19 +949,46 @@ export default function Portfolio() {
               duration: 3,
               ease: "easeInOut",
             }}
-            className="absolute -bottom-2 -right-2 bg-amber-400 text-teal-900 px-3 py-1 rounded-full text-xs font-bold shadow-md"
+            className="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-400 to-yellow-400 text-teal-900 px-4 py-2 rounded-full text-xs font-bold shadow-xl backdrop-blur-sm"
           >
-            Disponível!
+            <span className="flex items-center gap-1">
+              <motion.span
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ repeat: Infinity, duration: 1 }}
+              >
+                ✨
+              </motion.span>
+              Disponível!
+            </span>
           </motion.div>
         </motion.div>
 
-        {/* Header Content */}
-        <div className="text-center md:text-left z-10">
+        {/* Header Content - Melhorado */}
+        <motion.div 
+          className="text-center md:text-left z-10 relative"
+          style={{ y }}
+        >
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
+            {/* Badge animado */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
+            >
+              <motion.span
+                animate={{ rotate: [0, 360] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+              >
+                <FiCode className="text-amber-300" />
+              </motion.span>
+              <span className="text-sm font-medium">Desenvolvedor Full Stack</span>
+            </motion.div>
+
             <TypeAnimation
               sequence={[
                 "Emerson Morales Jr",
@@ -698,15 +997,14 @@ export default function Portfolio() {
                 1000,
                 "UI/UX Designer",
                 1000,
-                () => {
-                  console.log("Animação completa");
-                },
+                "Criador de Experiências",
+                1000,
               ]}
               wrapper="h1"
               cursor={true}
               repeat={Infinity}
               style={{ display: "inline-block" }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-2 bg-gradient-to-r from-amber-300 to-yellow-400 bg-clip-text text-transparent"
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient"
               deletionSpeed={70}
             />
 
@@ -714,12 +1012,29 @@ export default function Portfolio() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl opacity-90 mb-6"
+              className="text-xl md:text-2xl lg:text-3xl opacity-90 mb-8 font-light"
             >
               Criando soluções digitais com{" "}
-              <span className="font-semibold text-amber-300">React</span>,{" "}
-              <span className="font-semibold text-amber-300">Node.js</span> e{" "}
-              <span className="font-semibold text-amber-300">Design</span>
+              <motion.span 
+                className="font-semibold text-amber-300 inline-block"
+                whileHover={{ scale: 1.1, y: -2 }}
+              >
+                React
+              </motion.span>
+              {", "}
+              <motion.span 
+                className="font-semibold text-amber-300 inline-block"
+                whileHover={{ scale: 1.1, y: -2 }}
+              >
+                Node.js
+              </motion.span>
+              {" e "}
+              <motion.span 
+                className="font-semibold text-amber-300 inline-block"
+                whileHover={{ scale: 1.1, y: -2 }}
+              >
+                Design
+              </motion.span>
             </motion.p>
 
             <motion.div
@@ -730,33 +1045,112 @@ export default function Portfolio() {
             >
               <motion.a
                 href="#projetos"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center px-6 py-3 bg-white text-teal-900 font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:bg-amber-100"
+                whileHover={{ y: -5, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-white to-amber-50 text-teal-900 font-bold rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all relative overflow-hidden"
               >
-                Ver Projetos
+                <span className="relative z-10">Ver Projetos</span>
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <FiExternalLink className="relative z-10" />
               </motion.a>
               <motion.a
                 href="#contato"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-teal-900 transition-all"
+                whileHover={{ y: -5, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white/50 backdrop-blur-sm text-white font-bold rounded-full hover:bg-white/20 hover:border-white transition-all relative overflow-hidden"
               >
-                Contato
+                <span className="relative z-10">Contato</span>
+                <motion.span
+                  className="absolute inset-0 bg-white/10"
+                  initial={{ scale: 0 }}
+                  whileHover={{ scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.a>
             </motion.div>
-          </motion.div>
-        </div>
 
-        {/* Background elements */}
-        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
+            {/* Estatísticas rápidas */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 }}
+              className="flex flex-wrap justify-center md:justify-start gap-6 mt-12"
+            >
+              {[
+                { icon: <FiCode />, value: "8+", label: "Projetos" },
+                { icon: <FiZap />, value: "100%", label: "Satisfação" },
+                { icon: <FiTrendingUp />, value: "3+", label: "Anos Exp." },
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1 + i * 0.1 }}
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  className="text-center p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20"
+                >
+                  <div className="text-amber-300 text-2xl mb-2 flex justify-center">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl font-bold mb-1">{stat.value}</div>
+                  <div className="text-sm opacity-80">{stat.label}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Background elements animados */}
+        <motion.div
+          className="absolute -bottom-20 -right-20 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-20 -z-10"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-20 -z-10"
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 10,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 w-96 h-96 bg-amber-500 rounded-full filter blur-3xl opacity-10 -z-10"
+          animate={{
+            scale: [1, 1.5, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 15,
+            ease: "linear",
+          }}
+          style={{ transform: "translate(-50%, -50%)" }}
+        />
       </header>
 
-      {/* About Me Section */}
+      {/* About Me Section - Melhorado */}
       <section
         id="sobre"
-        className="py-16 md:py-24 px-6 relative bg-white dark:bg-gray-900 overflow-hidden"
+        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden"
       >
         {/* Video Background */}
         <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
@@ -812,11 +1206,13 @@ export default function Portfolio() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-12 md:mb-16 text-center text-gray-800 dark:text-white"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-16 md:mb-20 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10">Sobre Mim</span>
-              <span className="absolute bottom-1 left-0 w-full h-3 bg-teal-500/60 dark:bg-teal-800/60 z-0"></span>
+              <span className="relative z-10 bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                Sobre Mim
+              </span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-200/40 dark:bg-teal-800/40 z-0 rounded-full"></span>
             </span>
           </motion.h2>
 
@@ -856,23 +1252,33 @@ export default function Portfolio() {
               </motion.p>
 
               <motion.div variants={itemVariant}>
-                <h3 className="text-xl font-semibold mb-6 text-gray-200 dark:text-gray-200">
+                <h3 className="text-2xl font-bold mb-8 text-gray-200 dark:text-gray-200 flex items-center gap-2">
+                  <FiCode className="text-teal-400" />
                   Habilidades:
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {skills.map((skill, index) => (
                     <motion.div
                       key={index}
                       variants={itemVariant}
-                      whileHover={{ y: -5 }}
-                      className="group relative overflow-hidden p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700"
+                      whileHover={{ y: -8, scale: 1.05, rotate: 2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="group relative overflow-hidden p-6 bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all border border-white/20 dark:border-gray-700"
                     >
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
-                      ></div>
-                      <div className="flex flex-col items-center">
-                        <div className="mb-3">{skill.icon}</div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-white transition-colors">
+                      <motion.div
+                        className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                        initial={{ scale: 0 }}
+                        whileHover={{ scale: 1 }}
+                      />
+                      <div className="flex flex-col items-center relative z-10">
+                        <motion.div
+                          className="mb-4"
+                          whileHover={{ rotate: 360, scale: 1.2 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          {skill.icon}
+                        </motion.div>
+                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-white transition-colors text-center">
                           {skill.name}
                         </span>
                       </div>
@@ -884,9 +1290,13 @@ export default function Portfolio() {
 
             <motion.div
               variants={itemVariant}
-              className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700"
+              className="bg-white/10 dark:bg-gray-800/50 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700 relative overflow-hidden"
             >
-              <h3 className="text-2xl font-semibold mb-6 text-center text-teal-600 dark:text-teal-400">
+              {/* Efeito de brilho */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
+              
+              <h3 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent flex items-center justify-center gap-2">
+                <FiTrendingUp />
                 Experiência
               </h3>
               <div className="space-y-8">
@@ -939,41 +1349,24 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Metrics Section */}
-      <section className="py-12 bg-emerald-700 text-white dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            viewport={{ once: true }}
-            className="p-6 backdrop-blur-sm bg-white/10 dark:bg-gray-800/50 rounded-xl hover:bg-white/20 dark:hover:bg-gray-700/50 transition-all border border-white/20 dark:border-gray-700"
-          >
-            <p className="text-4xl font-bold mb-2">8+</p>
-            <p>Projetos Completos</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
-            className="p-6 backdrop-blur-sm bg-white/10 dark:bg-gray-800/50 rounded-xl hover:bg-white/20 dark:hover:bg-gray-700/50 transition-all border border-white/20 dark:border-gray-700"
-          >
-            <p className="text-4xl font-bold mb-2">100%</p>
-            <p>Satisfação do Cliente</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            viewport={{ once: true }}
-            className="p-6 backdrop-blur-sm bg-white/10 dark:bg-gray-800/50 rounded-xl hover:bg-white/20 dark:hover:bg-gray-700/50 transition-all border border-white/20 dark:border-gray-700"
-          >
-            <p className="text-4xl font-bold mb-2">3+</p>
-            <p>Anos de Experiência</p>
-          </motion.div>
+      {/* Metrics Section - Melhorado com contadores animados */}
+      <section className="py-16 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-700 text-white dark:bg-gray-900 relative overflow-hidden">
+        {/* Efeito de ondas */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center relative z-10">
+          {[
+            { value: 8, suffix: "+", label: "Projetos Completos", icon: <FiCode size={32} /> },
+            { value: 100, suffix: "%", label: "Satisfação do Cliente", icon: <FiZap size={32} /> },
+            { value: 3, suffix: "+", label: "Anos de Experiência", icon: <FiTrendingUp size={32} /> },
+          ].map((metric, index) => (
+            <CounterCard key={index} metric={metric} delay={index * 0.1} />
+          ))}
         </div>
       </section>
 
@@ -1026,19 +1419,34 @@ export default function Portfolio() {
               {filteredProjects.map((project) => (
                 <div key={project.id} className="px-2 outline-none">
                   <motion.div
-                    className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden border border-gray-100 dark:border-gray-600 mx-auto max-w-md"
-                    whileHover={{ y: -5 }}
+                    className="group bg-white dark:bg-gray-700 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-600 mx-auto max-w-md relative backdrop-blur-sm"
+                    whileHover={{ y: -10, scale: 1.02 }}
                     data-category={project.category}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
                   >
-                    <div
+                    {/* Efeito de brilho no hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-teal-500/10 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                    
+                    {/* Badge de categoria */}
+                    <div className="absolute top-4 right-4 z-20">
+                      <span className="px-3 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
+                        {project.category === "mobile" ? "📱 Mobile" : "🌐 Web"}
+                      </span>
+                    </div>
+                    <motion.div
                       className={`
                       relative overflow-hidden 
                       ${
                         project.category === "mobile"
-                          ? "pt-[100%] bg-gray-50 dark:bg-gray-800"
-                          : "pt-[56.25%] bg-gray-200 dark:bg-gray-600"
+                          ? "pt-[100%] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
+                          : "pt-[56.25%] bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700"
                       }
                     `}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.3 }}
                     >
                       <img
                         src={project.image}
@@ -1050,15 +1458,21 @@ export default function Portfolio() {
                               ? "object-contain p-6"
                               : "object-cover"
                           }
+                          transition-transform duration-500 group-hover:scale-110
                         `}
                         loading="lazy"
                       />
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                      {/* Overlay no hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </motion.div>
+                    <div className="p-6">
+                      <motion.h3 
+                        className="text-2xl font-bold mb-3 text-gray-900 dark:text-white bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                        whileHover={{ x: 5 }}
+                      >
                         {project.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      </motion.h3>
+                      <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                         {project.description}
                       </p>
 
@@ -1082,38 +1496,55 @@ export default function Portfolio() {
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {project.tags.map((tag) => (
-                          <span
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tags.map((tag, i) => (
+                          <motion.span
                             key={tag}
-                            className="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded"
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            className="text-xs bg-gradient-to-r from-teal-100 to-emerald-100 dark:from-teal-900/50 dark:to-emerald-900/50 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-full font-medium border border-teal-200 dark:border-teal-800"
                           >
                             {tag}
-                          </span>
+                          </motion.span>
                         ))}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-teal-600 dark:text-teal-400 font-medium">
-                          {project.metrics}
+                      
+                      {/* Métricas com ícone */}
+                      <div className="mb-6 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                        <div className="flex items-center gap-2">
+                          <FiTrendingUp className="text-teal-600 dark:text-teal-400" />
+                          <span className="text-sm text-teal-700 dark:text-teal-300 font-semibold">
+                            {project.metrics}
+                          </span>
                         </div>
-                        <div className="flex gap-4">
-                          <a
-                            href={project.links.demo}
-                            className="text-teal-600 dark:text-teal-400 hover:underline flex items-center text-sm"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <FiExternalLink className="mr-1" /> Demo
-                          </a>
-                          <a
-                            href={project.links.code}
-                            className="text-gray-600 dark:text-gray-400 hover:underline flex items-center text-sm"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <FiGithub className="mr-1" /> Código
-                          </a>
-                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between gap-4">
+                        <motion.a
+                          href={project.links.demo}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-teal-500/50 transition-all group"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FiExternalLink className="group-hover:rotate-45 transition-transform" />
+                          <span>Demo</span>
+                        </motion.a>
+                        <motion.a
+                          href={project.links.code}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all group border border-gray-200 dark:border-gray-700"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FiGithub className="group-hover:scale-110 transition-transform" />
+                          <span>Código</span>
+                        </motion.a>
                       </div>
                     </div>
                   </motion.div>
@@ -1124,18 +1555,24 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 bg-white dark:bg-gray-900 px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* Testimonials Section - Melhorado */}
+      <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 px-6 relative overflow-hidden">
+        {/* Decoração de fundo */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+        
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-white"
+            className="text-4xl md:text-5xl font-extrabold mb-16 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10">Depoimentos</span>
-              <span className="absolute bottom-1 left-0 w-full h-3 bg-teal-200/60 dark:bg-teal-800/60 z-0"></span>
+              <span className="relative z-10 bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                Depoimentos
+              </span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-200/40 dark:bg-teal-800/40 z-0 rounded-full"></span>
             </span>
           </motion.h2>
 
@@ -1143,48 +1580,66 @@ export default function Portfolio() {
             {testimonials.map((testimonial, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: i * 0.15, duration: 0.5 }}
                 viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700"
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="group bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-700 relative overflow-hidden backdrop-blur-sm"
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold mr-3 overflow-hidden">
-                    {testimonial.avatar ? (
-                      <img
-                        src={testimonial.avatar}
-                        alt={testimonial.author}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      testimonial.author.charAt(0)
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-800 dark:text-white">
-                      {testimonial.author}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
-                <p className="italic text-gray-700 dark:text-gray-300">
-                  "{testimonial.quote}"
-                </p>
-                <div className="mt-4 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-amber-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                {/* Efeito de brilho no hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-teal-500/5 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Aspas decorativas */}
+                <div className="absolute top-4 left-4 text-6xl text-teal-500/20 dark:text-teal-400/20 font-serif">"</div>
+                <div className="relative z-10">
+                  <div className="flex items-center mb-6">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 dark:from-teal-600 dark:to-emerald-700 flex items-center justify-center text-white font-bold mr-4 overflow-hidden shadow-lg ring-4 ring-teal-100 dark:ring-teal-900/50"
                     >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
+                      {testimonial.avatar ? (
+                        <img
+                          src={testimonial.avatar}
+                          alt={testimonial.author}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        testimonial.author.charAt(0)
+                      )}
+                    </motion.div>
+                    <div>
+                      <p className="font-bold text-lg text-gray-800 dark:text-white">
+                        {testimonial.author}
+                      </p>
+                      <p className="text-sm text-teal-600 dark:text-teal-400 font-medium">
+                        {testimonial.role}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <p className="italic text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-6 relative z-10 pl-4 border-l-4 border-teal-500/30">
+                    {testimonial.quote}
+                  </p>
+                  
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <motion.svg
+                        key={i}
+                        initial={{ opacity: 0, scale: 0 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        whileHover={{ scale: 1.2, rotate: 15 }}
+                        className="w-6 h-6 text-amber-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </motion.svg>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -1297,10 +1752,15 @@ export default function Portfolio() {
 
             <motion.form
               variants={itemVariant}
-              className="bg-white dark:bg-gray-700 p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-600"
+              className="bg-white dark:bg-gray-700 p-6 md:p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-600 relative overflow-hidden backdrop-blur-sm"
               onSubmit={handleSubmit}
               ref={formRef}
             >
+              {/* Efeito de fundo decorativo */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+              
+              <div className="relative z-10">
               <div className="mb-6">
                 <label
                   htmlFor="name"
@@ -1411,48 +1871,110 @@ export default function Portfolio() {
 
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02 }}
+                disabled={isSubmitting}
+                whileHover={{ scale: isSubmitting ? 1 : 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-bold hover:shadow-lg transition-all"
+                className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-4 px-6 rounded-xl font-bold hover:shadow-xl hover:shadow-teal-500/50 transition-all relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Enviar Mensagem
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {isSubmitting ? (
+                    <>
+                      <FiLoader className="animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      Enviar Mensagem
+                      <motion.span
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                      >
+                        →
+                      </motion.span>
+                    </>
+                  )}
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.button>
+              </div>
             </motion.form>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-teal-900 to-emerald-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
-            <div className="text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-4">
+      {/* Footer - Melhorado */}
+      <footer className="bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white py-16 relative overflow-hidden">
+        {/* Efeitos de fundo */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+            backgroundSize: '50px 50px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-center md:text-left"
+            >
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
                 Pronto para transformar sua ideia em realidade?
               </h3>
               <motion.a
                 href="#contato"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.1, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-block bg-white text-teal-900 px-6 py-2 rounded-full font-medium shadow-md hover:shadow-lg transition-all"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-white to-amber-50 text-teal-900 px-8 py-4 rounded-full font-bold shadow-2xl hover:shadow-amber-500/50 transition-all relative overflow-hidden"
               >
-                Vamos Conversar
+                <span className="relative z-10">Vamos Conversar</span>
+                <motion.span
+                  className="relative z-10"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  →
+                </motion.span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.a>
-            </div>
+            </motion.div>
 
-            <div className="flex gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex gap-4"
+            >
               {[
                 {
-                  icon: <FiLinkedin size={24} />,
+                  icon: <FiLinkedin size={28} />,
                   url: "https://www.linkedin.com/in/emerson-morales-junior-6469b8231/",
+                  label: "LinkedIn",
+                  color: "from-blue-500 to-blue-600",
                 },
                 {
-                  icon: <FiInstagram size={24} />,
+                  icon: <FiInstagram size={28} />,
                   url: "https://www.instagram.com/emersxn_jr",
+                  label: "Instagram",
+                  color: "from-pink-500 to-purple-600",
                 },
                 {
-                  icon: <FiGithub size={24} />,
+                  icon: <FiGithub size={28} />,
                   url: "https://github.com/emersonjrdev",
+                  label: "GitHub",
+                  color: "from-gray-700 to-gray-900",
                 },
               ].map((social, index) => (
                 <motion.a
@@ -1460,47 +1982,88 @@ export default function Portfolio() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -5, scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="text-white hover:text-amber-300 transition-colors p-2 rounded-full hover:bg-white/10"
-                  aria-label={
-                    social.icon.type === FiLinkedin
-                      ? "LinkedIn"
-                      : social.icon.type === FiInstagram
-                      ? "Instagram"
-                      : "GitHub"
-                  }
+                  whileHover={{ y: -8, scale: 1.15, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="group relative p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:border-white/40 transition-all"
+                  aria-label={social.label}
                 >
-                  {social.icon}
+                  <div className="relative z-10 text-white group-hover:text-amber-300 transition-colors">
+                    {social.icon}
+                  </div>
+                  <motion.div
+                    className={`absolute inset-0 bg-gradient-to-r ${social.color} rounded-full opacity-0 group-hover:opacity-100 transition-opacity`}
+                    initial={{ scale: 0 }}
+                    whileHover={{ scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </motion.a>
               ))}
-            </div>
+            </motion.div>
           </div>
 
-          <div className="border-t border-white/20 w-full pt-8 text-center">
-            <p className="text-lg mb-2">Vamos criar algo incrível juntos!</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="border-t border-white/20 w-full pt-8 text-center"
+          >
+            <p className="text-xl mb-3 font-semibold">Vamos criar algo incrível juntos! 🚀</p>
             <p className="text-sm opacity-80">
               © {new Date().getFullYear()} Emerson Morales Junior. Todos os
               direitos reservados.
             </p>
-          </div>
+          </motion.div>
         </div>
       </footer>
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - Melhorado */}
       <AnimatePresence>
         {showTopBtn && (
           <motion.button
             onClick={scrollToTop}
             aria-label="Voltar ao topo"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            whileHover={{ scale: 1.1, backgroundColor: "#059669" }}
-            whileTap={{ scale: 0.95 }}
-            className="fixed bottom-8 right-8 bg-teal-600 text-white p-3 rounded-full shadow-xl hover:shadow-2xl transition-all z-40"
+            initial={{ opacity: 0, scale: 0, rotate: -180 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0, rotate: 180 }}
+            whileHover={{ scale: 1.15, y: -5, rotate: 360 }}
+            whileTap={{ scale: 0.9 }}
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-4 rounded-full shadow-2xl hover:shadow-teal-500/50 transition-all z-40 group relative overflow-hidden"
           >
-            <FiArrowUp size={24} />
+            {/* Efeito de brilho no hover */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "100%" }}
+              transition={{ duration: 0.6 }}
+            />
+            <FiArrowUp size={24} className="relative z-10" />
+            
+            {/* Indicador de progresso circular */}
+            <svg
+              className="absolute inset-0 w-full h-full transform -rotate-90"
+              viewBox="0 0 100 100"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="4"
+              />
+              <motion.circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="white"
+                strokeWidth="4"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: scrollProgress / 100 }}
+                transition={{ duration: 0.1 }}
+              />
+            </svg>
           </motion.button>
         )}
       </AnimatePresence>
