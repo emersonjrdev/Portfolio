@@ -1347,54 +1347,6 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Seção de Jogo de Feitiços */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
-        {/* Efeitos mágicos de fundo - Reduzido */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-slate-900/50 z-10"></div>
-          {/* Estrelas mágicas - Reduzido */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-yellow-300"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 10 + 6}px`,
-              }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: "easeInOut",
-              }}
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-extrabold mb-12 text-center"
-          >
-            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
-              🪄 JOGO DE FEITIÇOS
-            </span>
-          </motion.h2>
-          <Suspense fallback={<div className="h-[600px] md:h-[700px] flex items-center justify-center text-yellow-400">Carregando magia...</div>}>
-            <SpellGame />
-          </Suspense>
-        </div>
-      </section>
-
       {/* Terminal Futurista */}
       <section className="py-20 bg-gradient-to-b from-black to-gray-900 px-6 relative">
         <div className="max-w-4xl mx-auto">
