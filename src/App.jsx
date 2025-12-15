@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   FiGithub,
@@ -35,14 +35,12 @@ import "slick-carousel/slick/slick-theme.css";
 import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import React, { lazy, Suspense } from "react";
 import Terminal from "./components/Terminal";
 import HologramCard from "./components/HologramCard";
 import MagicLoader from "./components/MagicLoader";
 
 // Lazy loading de componentes pesados
 const Scene3D = lazy(() => import("./components/Scene3D"));
-const SpellGame = lazy(() => import("./components/SpellGame"));
 const Timeline3D = lazy(() => import("./components/Timeline3D"));
 
 // Componente de contador animado
