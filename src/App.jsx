@@ -1003,26 +1003,39 @@ export default function Portfolio() {
                 href="#projetos"
                 whileHover={{ y: -5, scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-white to-amber-50 text-teal-900 font-bold rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all relative overflow-hidden"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all relative overflow-hidden"
               >
-                <span className="relative z-10">Ver Projetos</span>
+                <span className="relative z-10">Abrir Grimório</span>
                 <motion.span
-                  className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400"
+                  className="relative z-10 text-2xl"
+                  animate={{ rotate: [0, 15, -15, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  📖
+                </motion.span>
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-amber-500 to-yellow-500"
                   initial={{ x: "-100%" }}
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.3 }}
                 />
-                <FiExternalLink className="relative z-10" />
               </motion.a>
               <motion.a
                 href="#contato"
                 whileHover={{ y: -5, scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white/50 backdrop-blur-sm text-white font-bold rounded-full hover:bg-white/20 hover:border-white transition-all relative overflow-hidden"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-yellow-400/50 backdrop-blur-sm text-yellow-300 font-bold rounded-full hover:bg-yellow-400/20 hover:border-yellow-400 transition-all relative overflow-hidden"
               >
-                <span className="relative z-10">Contato</span>
+                <span className="relative z-10">Enviar Coruja</span>
                 <motion.span
-                  className="absolute inset-0 bg-white/10"
+                  className="relative z-10 text-xl"
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  🦉
+                </motion.span>
+                <motion.span
+                  className="absolute inset-0 bg-yellow-400/10"
                   initial={{ scale: 0 }}
                   whileHover={{ scale: 1 }}
                   transition={{ duration: 0.3 }}
