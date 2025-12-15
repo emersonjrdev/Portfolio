@@ -36,10 +36,11 @@ import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import Scene3D from "./components/Scene3D";
-import SpaceGame from "./components/SpaceGame";
+import MatrixGame from "./components/MatrixGame";
 import Terminal from "./components/Terminal";
 import HologramCard from "./components/HologramCard";
 import Timeline3D from "./components/Timeline3D";
+import FuturisticLoader from "./components/FuturisticLoader";
 
 // Componente de contador animado
 function CounterCard({ metric, delay }) {
@@ -156,12 +157,9 @@ export default function Portfolio() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
-  // Simular loading
+  // Simular loading com loader futurista
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1800);
-    return () => clearTimeout(timer);
+    // O loader gerencia seu próprio tempo
   }, []);
 
   // Mouse tracking para efeitos interativos
@@ -509,102 +507,22 @@ export default function Portfolio() {
     },
   ];
 
-  const testimonials = [
-    {
-      quote:
-        "Trabalho excepcional! Entregou além do esperado com ótima comunicação e atenção aos detalhes.",
-      author: "João Souza",
-      role: "CEO, TechSolutions",
-      avatar: "/avatar1.jpg",
-    },
-    {
-      quote:
-        "Solução perfeita para nossas necessidades com ótimo custo-benefício e prazos cumpridos rigorosamente.",
-      author: "Maria Clara",
-      role: "Gerente de Projetos, InovaCorp",
-      avatar: "/avatar2.jpg",
-    },
-    {
-      quote:
-        "Profissional altamente qualificado e comprometido com os resultados. Superou todas as expectativas.",
-      author: "Paulo Henrique",
-      role: "CTO, DigitalMind",
-      avatar: "/avatar3.jpg",
-    },
-  ];
 
   const filteredProjects =
     activeFilter === "all"
       ? projects
       : projects.filter((project) => project.category === activeFilter);
 
-  // Loading Screen
+  // Loading Screen Futurista
   if (isLoading) {
-    return (
-      <div className="fixed inset-0 bg-gradient-to-br from-teal-900 to-emerald-900 flex flex-col items-center justify-center z-50">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center"
-        >
-          <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              rotate: {
-                repeat: Infinity,
-                duration: 2,
-                ease: "linear",
-              },
-              scale: {
-                repeat: Infinity,
-                repeatType: "reverse",
-                duration: 1,
-                ease: "easeInOut",
-              },
-            }}
-            className="mb-6"
-          >
-            <FiLoader className="text-amber-300" size={48} />
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-2"
-          >
-            Emerson Morales Jr
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="text-white/80 text-lg"
-          >
-            Carregando portfólio...
-          </motion.p>
-
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "50%" }}
-            transition={{ delay: 0.9, duration: 1.5, ease: "easeInOut" }}
-            className="h-1 bg-amber-300 mt-6 rounded-full"
-          />
-        </motion.div>
-      </div>
-    );
+    return <FuturisticLoader onComplete={() => setIsLoading(false)} />;
   }
 
   return (
     <div
       className={`min-h-screen ${
         darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
-      } font-sans selection:bg-teal-500 selection:text-white transition-colors duration-300 overflow-x-hidden relative`}
+      } font-sans selection:bg-cyan-500 selection:text-white transition-colors duration-300 overflow-x-hidden relative`}
     >
       {/* Partículas de fundo */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -632,7 +550,7 @@ export default function Portfolio() {
 
       {/* Scroll progress bar melhorado */}
       <motion.div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-500 z-50 shadow-lg"
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 z-50 shadow-lg"
         style={{ width: `${scrollProgress}%` }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -839,7 +757,7 @@ export default function Portfolio() {
       {/* Header Section - Futurista com 3D */}
       <header 
         ref={heroRef}
-        className="relative bg-gradient-to-br from-gray-900 via-teal-900 to-emerald-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
+        className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-black flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
       >
         {/* Cena 3D de fundo - Ocultar em mobile para performance */}
         <div className="hidden md:block absolute inset-0 z-0 opacity-30">
@@ -1375,20 +1293,49 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Seção de Minigame Interativo */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+      {/* Seção de Minigame Matrix - Melhorado */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 via-purple-900 to-black px-6 relative overflow-hidden">
+        {/* Vídeo de fundo */}
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50"></div>
+          <ReactPlayer
+            url="/coding-bg.mp4"
+            playing
+            loop
+            muted
+            width="100%"
+            height="100%"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              minWidth: "100%",
+              minHeight: "100%",
+              objectFit: "cover",
+            }}
+            config={{
+              file: {
+                attributes: {
+                  style: { objectFit: "cover" },
+                },
+              },
+            }}
+          />
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
+            className="text-4xl md:text-6xl font-extrabold mb-12 text-center"
           >
-            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
-              🎮 Minigame Interativo
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent neon-text">
+              🎮 MATRIX GAME
             </span>
           </motion.h2>
-          <SpaceGame />
+          <MatrixGame />
         </div>
       </section>
 
@@ -1639,92 +1586,60 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Testimonials Section - Melhorado */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 px-6 relative overflow-hidden">
-        {/* Decoração de fundo */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+      {/* Seção de Tecnologias em Ação - Nova */}
+      <section className="py-20 bg-gradient-to-b from-black via-purple-900 to-black px-6 relative overflow-hidden">
+        {/* Vídeo de fundo */}
+        <div className="absolute inset-0 z-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50"></div>
+          <ReactPlayer
+            url="/coding-bg.mp4"
+            playing
+            loop
+            muted
+            width="100%"
+            height="100%"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              minWidth: "100%",
+              minHeight: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </div>
         
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-extrabold mb-16 text-center"
+            className="text-4xl md:text-6xl font-extrabold mb-16 text-center"
           >
-            <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent">
-                Depoimentos
-              </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-200/40 dark:bg-teal-800/40 z-0 rounded-full"></span>
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent neon-text">
+              🚀 Tecnologias em Ação
             </span>
           </motion.h2>
-
+          
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, i) => (
+            {[
+              { icon: '⚡', title: 'Performance', desc: 'Aplicações otimizadas e rápidas' },
+              { icon: '🎨', title: 'Design', desc: 'Interfaces modernas e intuitivas' },
+              { icon: '🔒', title: 'Segurança', desc: 'Código seguro e escalável' },
+            ].map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="group bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-700 relative overflow-hidden backdrop-blur-sm"
+                transition={{ delay: i * 0.2 }}
+                whileHover={{ scale: 1.05, y: -10 }}
+                className="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 backdrop-blur-md p-8 rounded-2xl border-2 border-cyan-500/50 shadow-2xl"
               >
-                {/* Efeito de brilho no hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-teal-500/5 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Aspas decorativas */}
-                <div className="absolute top-4 left-4 text-6xl text-teal-500/20 dark:text-teal-400/20 font-serif">"</div>
-                <div className="relative z-10">
-                  <div className="flex items-center mb-6">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 dark:from-teal-600 dark:to-emerald-700 flex items-center justify-center text-white font-bold mr-4 overflow-hidden shadow-lg ring-4 ring-teal-100 dark:ring-teal-900/50"
-                    >
-                      {testimonial.avatar ? (
-                        <img
-                          src={testimonial.avatar}
-                          alt={testimonial.author}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      ) : (
-                        testimonial.author.charAt(0)
-                      )}
-                    </motion.div>
-                    <div>
-                      <p className="font-bold text-lg text-gray-800 dark:text-white">
-                        {testimonial.author}
-                      </p>
-                      <p className="text-sm text-teal-600 dark:text-teal-400 font-medium">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <p className="italic text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-6 relative z-10 pl-4 border-l-4 border-teal-500/30">
-                    {testimonial.quote}
-                  </p>
-                  
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <motion.svg
-                        key={i}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
-                        whileHover={{ scale: 1.2, rotate: 15 }}
-                        className="w-6 h-6 text-amber-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </motion.svg>
-                    ))}
-                  </div>
-                </div>
+                <div className="text-5xl mb-4">{item.icon}</div>
+                <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-gray-300">{item.desc}</p>
               </motion.div>
             ))}
           </div>
