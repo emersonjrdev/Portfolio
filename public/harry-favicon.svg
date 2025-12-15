@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+  <!-- Raio do Harry Potter -->
+  <path d="M50 10 L60 40 L90 45 L70 65 L75 95 L50 80 L25 95 L30 65 L10 45 L40 40 Z" 
+        fill="#FFD700" 
+        stroke="#FFA500" 
+        stroke-width="2"/>
+  <path d="M50 20 L55 35 L70 38 L60 50 L63 70 L50 60 L37 70 L40 50 L30 38 L45 35 Z" 
+        fill="#FFA500"/>
+</svg>
+
