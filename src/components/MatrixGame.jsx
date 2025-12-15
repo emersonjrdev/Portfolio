@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiZap, FiTarget, FiTrophy, FiPlay, FiPause, FiRotateCcw } from 'react-icons/fi';
+import { FiZap, FiTarget, FiAward, FiPlay, FiPause, FiRotateCcw } from 'react-icons/fi';
 
 export default function MatrixGame() {
   const [score, setScore] = useState(0);
@@ -202,7 +202,7 @@ export default function MatrixGame() {
           
           <div className="bg-black/80 backdrop-blur-md px-4 py-3 rounded-lg border border-purple-500/50">
             <div className="flex items-center gap-2 text-purple-400 mb-1">
-              <FiTrophy />
+              <FiAward />
               <span className="text-xs font-semibold">BEST</span>
             </div>
             <div className="text-2xl font-bold text-white">{highScore.toLocaleString()}</div>
