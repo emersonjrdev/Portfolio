@@ -35,12 +35,15 @@ import "slick-carousel/slick/slick-theme.css";
 import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import Scene3D from "./components/Scene3D";
-import SpellGame from "./components/SpellGame";
+import React, { lazy, Suspense } from "react";
 import Terminal from "./components/Terminal";
 import HologramCard from "./components/HologramCard";
-import Timeline3D from "./components/Timeline3D";
 import MagicLoader from "./components/MagicLoader";
+
+// Lazy loading de componentes pesados
+const Scene3D = lazy(() => import("./components/Scene3D"));
+const SpellGame = lazy(() => import("./components/SpellGame"));
+const Timeline3D = lazy(() => import("./components/Timeline3D"));
 
 // Componente de contador animado
 function CounterCard({ metric, delay }) {
@@ -524,12 +527,21 @@ export default function Portfolio() {
         darkMode ? "dark bg-slate-900 text-gray-100" : "bg-slate-50 text-gray-900"
       } font-sans selection:bg-yellow-500 selection:text-black transition-colors duration-300 overflow-x-hidden relative`}
     >
-      {/* Partículas de fundo */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      {/* Partículas de fundo - Desabilitado em mobile */}
+      <div className="hidden lg:block fixed inset-0 z-0 pointer-events-none">
         <Particles
           id="tsparticles"
           init={particlesInit}
-          options={particlesOptions}
+          options={{
+            ...particlesOptions,
+            particles: {
+              ...particlesOptions.particles,
+              number: {
+                ...particlesOptions.particles.number,
+                value: 30, // Reduzido de 50 para 30
+              },
+            },
+          }}
           className="w-full h-full"
         />
       </div>
@@ -759,9 +771,11 @@ export default function Portfolio() {
         ref={heroRef}
         className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
       >
-        {/* Cena 3D de fundo - Ocultar em mobile para performance */}
-        <div className="hidden md:block absolute inset-0 z-0 opacity-30">
-          <Scene3D />
+        {/* Cena 3D de fundo - Ocultar em mobile e tablets para performance */}
+        <div className="hidden lg:block absolute inset-0 z-0 opacity-20">
+          <Suspense fallback={null}>
+            <Scene3D />
+          </Suspense>
         </div>
         {/* Efeito de gradiente animado */}
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 via-emerald-600/20 to-teal-600/20 animate-gradient-xy"></div>
@@ -1121,25 +1135,26 @@ export default function Portfolio() {
         id="sobre"
         className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 overflow-hidden"
       >
-        {/* Efeitos mágicos de fundo */}
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(30)].map((_, i) => (
+        {/* Efeitos mágicos de fundo - Reduzido */}
+        <div className="absolute inset-0 opacity-15">
+          {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute text-yellow-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 15 + 8}px`,
+                fontSize: `${Math.random() * 10 + 6}px`,
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.2, 0],
+                opacity: [0, 0.6, 0],
+                scale: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 4,
+                ease: "easeInOut",
               }}
             >
               ✨
@@ -1148,17 +1163,18 @@ export default function Portfolio() {
         </div>
         <div className="absolute top-1/4 left-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
         <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
-        {/* Video Background */}
-        <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-cyan-900/70 z-10"></div>
+        {/* Video Background - Desabilitado em mobile */}
+        <div className="hidden lg:block absolute inset-0 overflow-hidden z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-amber-900/70 z-10"></div>
           <div className="absolute inset-0 w-full h-full">
             <ReactPlayer
               url="/coding-bg.mp4"
-              playing
+              playing={!isLoading}
               loop
               muted
               width="100%"
               height="100%"
+              playsinline
               style={{
                 position: "absolute",
                 top: 0,
@@ -1166,7 +1182,7 @@ export default function Portfolio() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                opacity: isVideoLoaded ? 0.3 : 0,
+                opacity: isVideoLoaded ? 0.2 : 0,
                 transition: "opacity 1s ease",
               }}
               onReady={() => setIsVideoLoaded(true)}
@@ -1178,6 +1194,7 @@ export default function Portfolio() {
                       width: "100%",
                       height: "100%",
                     },
+                    preload: "metadata",
                   },
                 },
               }}
@@ -1334,28 +1351,28 @@ export default function Portfolio() {
 
       {/* Seção de Jogo de Feitiços */}
       <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
-        {/* Efeitos mágicos de fundo */}
-        <div className="absolute inset-0 z-0 opacity-30">
+        {/* Efeitos mágicos de fundo - Reduzido */}
+        <div className="absolute inset-0 z-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-slate-900/50 z-10"></div>
-          {/* Estrelas mágicas */}
-          {[...Array(50)].map((_, i) => (
+          {/* Estrelas mágicas - Reduzido */}
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute text-yellow-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 20 + 10}px`,
+                fontSize: `${Math.random() * 10 + 6}px`,
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.5, 0],
-                rotate: [0, 360],
+                opacity: [0, 0.6, 0],
+                scale: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 5 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 5,
+                ease: "easeInOut",
               }}
             >
               ✨
@@ -1374,7 +1391,9 @@ export default function Portfolio() {
               🪄 JOGO DE FEITIÇOS
             </span>
           </motion.h2>
-          <SpellGame />
+          <Suspense fallback={<div className="h-[600px] md:h-[700px] flex items-center justify-center text-yellow-400">Carregando magia...</div>}>
+            <SpellGame />
+          </Suspense>
         </div>
       </section>
 
@@ -1421,25 +1440,26 @@ export default function Portfolio() {
         id="projetos"
         className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-4 sm:px-6 relative overflow-hidden"
       >
-        {/* Efeitos mágicos de fundo */}
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(40)].map((_, i) => (
+        {/* Efeitos mágicos de fundo - Reduzido */}
+        <div className="absolute inset-0 opacity-15">
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute text-yellow-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 12 + 6}px`,
+                fontSize: `${Math.random() * 8 + 5}px`,
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.2, 0],
+                opacity: [0, 0.5, 0],
+                scale: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 5 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 5,
+                ease: "easeInOut",
               }}
             >
               ✨
@@ -1463,7 +1483,9 @@ export default function Portfolio() {
           
           {/* Timeline 3D - Mostrar apenas em telas grandes */}
           <div className="hidden lg:block">
-            <Timeline3D projects={filteredProjects} />
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-yellow-400">Carregando timeline...</div>}>
+              <Timeline3D projects={filteredProjects} />
+            </Suspense>
           </div>
           
           {/* Carrossel para mobile/tablet */}
@@ -1650,25 +1672,26 @@ export default function Portfolio() {
 
       {/* Seção de Casas de Hogwarts */}
       <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
-        {/* Efeitos mágicos */}
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(60)].map((_, i) => (
+        {/* Efeitos mágicos - Reduzido */}
+        <div className="absolute inset-0 opacity-15">
+          {[...Array(12)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute text-yellow-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 15 + 8}px`,
+                fontSize: `${Math.random() * 10 + 6}px`,
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.2, 0],
+                opacity: [0, 0.6, 0],
+                scale: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 4,
+                ease: "easeInOut",
               }}
             >
               ✨
@@ -1731,25 +1754,26 @@ export default function Portfolio() {
         id="contato"
         className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden"
       >
-        {/* Efeitos mágicos */}
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(50)].map((_, i) => (
+        {/* Efeitos mágicos - Reduzido */}
+        <div className="absolute inset-0 opacity-15">
+          {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute text-yellow-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 15 + 8}px`,
+                fontSize: `${Math.random() * 8 + 5}px`,
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.2, 0],
+                opacity: [0, 0.5, 0],
+                scale: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 5 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 5,
+                ease: "easeInOut",
               }}
             >
               ✨

@@ -147,25 +147,26 @@ export default function SpellGame() {
         }}></div>
       </div>
 
-      {/* Estrelas mágicas */}
+      {/* Estrelas mágicas - Reduzido para performance */}
       <div className="absolute inset-0">
-        {[...Array(80)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute text-yellow-300"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              fontSize: `${Math.random() * 15 + 8}px`,
+              fontSize: `${Math.random() * 10 + 6}px`,
             }}
             animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 1.2, 0],
+              opacity: [0, 0.8, 0],
+              scale: [0, 1, 0],
             }}
             transition={{
-              duration: 2 + Math.random() * 2,
+              duration: 3 + Math.random() * 2,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: Math.random() * 3,
+              ease: "easeInOut",
             }}
           >
             ✨

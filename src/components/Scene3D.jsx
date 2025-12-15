@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, memo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Float, MeshDistortMaterial } from '@react-three/drei';
 
@@ -71,11 +71,11 @@ function TechSphere({ position }) {
 
 function ParticleField() {
   const particlesRef = useRef();
-  const particleCount = 1000;
+  const particleCount = 200; // Reduzido de 1000 para 200
 
   useFrame((state) => {
     if (particlesRef.current) {
-      particlesRef.current.rotation.y += 0.001;
+      particlesRef.current.rotation.y += 0.0005; // Reduzido
     }
   });
 
@@ -94,24 +94,25 @@ function ParticleField() {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial size={0.05} color="#14b8a6" transparent opacity={0.6} />
+      <pointsMaterial size={0.08} color="#fbbf24" transparent opacity={0.4} />
     </points>
   );
 }
 
-export default function Scene3D() {
+const Scene3D = memo(function Scene3D() {
   return (
     <div className="w-full h-full min-h-[400px] md:min-h-[600px]">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 75 }}
-        gl={{ antialias: true, alpha: true }}
-        dpr={[1, 2]}
+        gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+        dpr={Math.min(window.devicePixelRatio, 1.5)}
+        performance={{ min: 0.5 }}
       >
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <pointLight position={[-10, -10, -10]} color="#10b981" intensity={0.5} />
         
-        <Stars radius={300} depth={60} count={2000} factor={7} fade speed={1} />
+        <Stars radius={300} depth={60} count={500} factor={5} fade speed={0.5} />
         <ParticleField />
         
         <RotatingBox position={[-2, 0, 0]} color="#14b8a6" speed={0.5} />
@@ -132,5 +133,7 @@ export default function Scene3D() {
       </Canvas>
     </div>
   );
-}
+});
+
+export default Scene3D;
 

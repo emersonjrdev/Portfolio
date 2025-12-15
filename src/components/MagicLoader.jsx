@@ -44,26 +44,26 @@ export default function MagicLoader({ onComplete }) {
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-50 flex flex-col items-center justify-center overflow-hidden">
-      {/* Estrelas mágicas */}
+      {/* Estrelas mágicas - Reduzido para performance */}
       <div className="absolute inset-0">
-        {[...Array(100)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute text-yellow-300"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              fontSize: `${Math.random() * 20 + 10}px`,
+              fontSize: `${Math.random() * 15 + 8}px`,
             }}
             animate={{
               opacity: [0, 1, 0],
-              scale: [0, 1.5, 0],
-              rotate: [0, 360],
+              scale: [0, 1.2, 0],
             }}
             transition={{
-              duration: 2 + Math.random() * 3,
+              duration: 3 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
+              ease: "easeInOut",
             }}
           >
             ✨
@@ -71,25 +71,25 @@ export default function MagicLoader({ onComplete }) {
         ))}
       </div>
 
-      {/* Partículas mágicas */}
+      {/* Partículas mágicas - Reduzido */}
       <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full"
+            className="absolute w-1.5 h-1.5 bg-yellow-400 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0],
+              y: [0, -50, 0],
+              opacity: [0, 0.8, 0],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 4 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
+              ease: "easeInOut",
             }}
           />
         ))}
