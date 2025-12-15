@@ -1,6 +1,6 @@
+import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Float, MeshDistortMaterial } from '@react-three/drei';
-import { useRef, useState } from 'react';
 
 function RotatingBox({ position, color, speed = 1 }) {
   const meshRef = useRef();

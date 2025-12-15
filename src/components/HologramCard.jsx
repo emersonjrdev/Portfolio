@@ -1,5 +1,5 @@
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
 
 export default function HologramCard({ title, description, icon, delay = 0 }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
