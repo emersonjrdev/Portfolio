@@ -282,8 +282,8 @@ export default function MatrixGame() {
                 scale: 1, 
                 opacity: 1,
                 rotate: 0,
-                y: `${target.y}%`,
-                x: `${target.x}%`,
+                top: `${target.y}%`,
+                left: `${target.x}%`,
               }}
               exit={{ scale: 0, opacity: 0, rotate: 180 }}
               onClick={() => hitTarget(target.id, target.type, target.points)}
@@ -291,8 +291,7 @@ export default function MatrixGame() {
               style={{
                 width: `${target.size}px`,
                 height: `${target.size}px`,
-                marginLeft: `-${target.size / 2}px`,
-                marginTop: `-${target.size / 2}px`,
+                transform: 'translate(-50%, -50%)',
               }}
             >
               <motion.div

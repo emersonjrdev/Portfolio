@@ -2060,7 +2060,8 @@ export default function Portfolio() {
             exit={{ opacity: 0, scale: 0, rotate: 180 }}
             whileHover={{ scale: 1.15, y: -5, rotate: 360 }}
             whileTap={{ scale: 0.9 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all z-[100] group relative overflow-hidden"
+            style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 100 }}
+            className="bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all group relative overflow-hidden"
           >
             {/* Efeito de brilho no hover */}
             <motion.div
