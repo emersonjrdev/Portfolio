@@ -104,7 +104,7 @@ export default function SpellGame() {
 
   useEffect(() => {
     if (gameActive) {
-      const createInterval = setInterval(createTarget, 600 - (score / 100));
+      const createInterval = setInterval(createTarget, Math.max(700 - (score / 150), 400)); // Reduzido frequência
       const updateInterval = setInterval(updateTargets, 16);
       
       gameLoopRef.current = { createInterval, updateInterval };
