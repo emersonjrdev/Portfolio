@@ -970,26 +970,26 @@ export default function Portfolio() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl lg:text-3xl opacity-90 mb-8 font-light"
             >
-              Criando soluções digitais com{" "}
+              Criando magia digital com{" "}
               <motion.span 
-                className="font-semibold text-amber-300 inline-block"
+                className="font-semibold text-yellow-400 inline-block"
                 whileHover={{ scale: 1.1, y: -2 }}
               >
                 React
               </motion.span>
               {", "}
               <motion.span 
-                className="font-semibold text-amber-300 inline-block"
+                className="font-semibold text-yellow-400 inline-block"
                 whileHover={{ scale: 1.1, y: -2 }}
               >
                 Node.js
               </motion.span>
               {" e "}
               <motion.span 
-                className="font-semibold text-amber-300 inline-block"
+                className="font-semibold text-yellow-400 inline-block"
                 whileHover={{ scale: 1.1, y: -2 }}
               >
-                Design
+                Feitiços
               </motion.span>
             </motion.p>
 
@@ -1050,11 +1050,11 @@ export default function Portfolio() {
                   whileHover={{ scale: 1.1, y: -5 }}
                   className="text-center p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20"
                 >
-                  <div className="text-amber-300 text-2xl mb-2 flex justify-center">
-                    {stat.icon}
+                  <div className="text-yellow-400 text-3xl mb-2 flex justify-center">
+                    {stat.icon === <FiCode /> ? '🪄' : stat.icon === <FiZap /> ? '⚡' : '📈'}
                   </div>
-                  <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
+                  <div className="text-3xl font-bold mb-1 text-white">{stat.value}</div>
+                  <div className="text-sm opacity-80 text-yellow-200">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
