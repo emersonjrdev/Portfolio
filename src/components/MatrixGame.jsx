@@ -32,7 +32,7 @@ export default function MatrixGame() {
     
     const newTarget = {
       id: targetIdRef.current++,
-      x: Math.random() * 85 + 7.5,
+      x: Math.random() * 90 + 5,
       y: -10,
       speed: type === 'fast' ? 2.5 + Math.random() * 1.5 : 
              type === 'mega' ? 0.8 : 

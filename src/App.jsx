@@ -1114,36 +1114,39 @@ export default function Portfolio() {
         <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-5"></div>
         {/* Video Background */}
         <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-900/70 to-emerald-900/70 z-10"></div>
-          <ReactPlayer
-            url="/coding-bg.mp4"
-            playing
-            loop
-            muted
-            width="100%"
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              minWidth: "100%",
-              minHeight: "100%",
-              objectFit: "cover",
-              opacity: isVideoLoaded ? 0.3 : 0,
-              transition: "opacity 1s ease",
-            }}
-            onReady={() => setIsVideoLoaded(true)}
-            config={{
-              file: {
-                attributes: {
-                  style: {
-                    objectFit: "cover",
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-cyan-900/70 z-10"></div>
+          <div className="absolute inset-0 w-full h-full">
+            <ReactPlayer
+              url="/coding-bg.mp4"
+              playing
+              loop
+              muted
+              width="100%"
+              height="100%"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: isVideoLoaded ? 0.3 : 0,
+                transition: "opacity 1s ease",
+              }}
+              onReady={() => setIsVideoLoaded(true)}
+              config={{
+                file: {
+                  attributes: {
+                    style: {
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    },
                   },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
 
         {/* Imagem de fundo apenas para mobile */}
@@ -1297,31 +1300,36 @@ export default function Portfolio() {
       <section className="py-20 bg-gradient-to-b from-gray-900 via-purple-900 to-black px-6 relative overflow-hidden">
         {/* Vídeo de fundo */}
         <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50"></div>
-          <ReactPlayer
-            url="/coding-bg.mp4"
-            playing
-            loop
-            muted
-            width="100%"
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              minWidth: "100%",
-              minHeight: "100%",
-              objectFit: "cover",
-            }}
-            config={{
-              file: {
-                attributes: {
-                  style: { objectFit: "cover" },
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50 z-10"></div>
+          <div className="absolute inset-0 w-full h-full">
+            <ReactPlayer
+              url="/coding-bg.mp4"
+              playing
+              loop
+              muted
+              width="100%"
+              height="100%"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              config={{
+                file: {
+                  attributes: {
+                    style: {
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    },
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -1590,24 +1598,36 @@ export default function Portfolio() {
       <section className="py-20 bg-gradient-to-b from-black via-purple-900 to-black px-6 relative overflow-hidden">
         {/* Vídeo de fundo */}
         <div className="absolute inset-0 z-0 opacity-30">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50"></div>
-          <ReactPlayer
-            url="/coding-bg.mp4"
-            playing
-            loop
-            muted
-            width="100%"
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              minWidth: "100%",
-              minHeight: "100%",
-              objectFit: "cover",
-            }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50 z-10"></div>
+          <div className="absolute inset-0 w-full h-full">
+            <ReactPlayer
+              url="/coding-bg.mp4"
+              playing
+              loop
+              muted
+              width="100%"
+              height="100%"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              config={{
+                file: {
+                  attributes: {
+                    style: {
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
         </div>
         
         <div className="max-w-6xl mx-auto relative z-10">
@@ -2040,7 +2060,7 @@ export default function Portfolio() {
             exit={{ opacity: 0, scale: 0, rotate: 180 }}
             whileHover={{ scale: 1.15, y: -5, rotate: 360 }}
             whileTap={{ scale: 0.9 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-4 rounded-full shadow-2xl hover:shadow-teal-500/50 transition-all z-40 group relative overflow-hidden"
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all z-[100] group relative overflow-hidden"
           >
             {/* Efeito de brilho no hover */}
             <motion.div
