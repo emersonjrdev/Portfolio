@@ -35,6 +35,11 @@ import "slick-carousel/slick/slick-theme.css";
 import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import Scene3D from "./components/Scene3D";
+import SpaceGame from "./components/SpaceGame";
+import Terminal from "./components/Terminal";
+import HologramCard from "./components/HologramCard";
+import Timeline3D from "./components/Timeline3D";
 
 // Componente de contador animado
 function CounterCard({ metric, delay }) {
@@ -831,11 +836,15 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
 
-      {/* Header Section - Melhorado */}
+      {/* Header Section - Futurista com 3D */}
       <header 
         ref={heroRef}
-        className="relative bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
+        className="relative bg-gradient-to-br from-gray-900 via-teal-900 to-emerald-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
       >
+        {/* Cena 3D de fundo - Ocultar em mobile para performance */}
+        <div className="hidden md:block absolute inset-0 z-0 opacity-30">
+          <Scene3D />
+        </div>
         {/* Efeito de gradiente animado */}
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 via-emerald-600/20 to-teal-600/20 animate-gradient-xy"></div>
         
@@ -888,14 +897,18 @@ export default function Portfolio() {
           </div>
         </button>
 
-        {/* Profile Image - Melhorado com efeitos 3D */}
+        {/* Profile Image - Futurista com holograma */}
         <motion.div
           initial={{ scale: 0, rotate: -15, opacity: 0 }}
           animate={{ scale: 1, rotate: 0, opacity: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
           className="relative mb-8 md:mb-0 md:mr-12 z-10 w-40 h-40 md:w-56 md:h-56"
-          whileHover={{ scale: 1.05, rotate: 5 }}
+          whileHover={{ scale: 1.1, rotate: 5 }}
         >
+          {/* Efeito holográfico */}
+          <div className="absolute inset-0 rounded-full border-4 border-teal-400/50 animate-pulse" style={{
+            boxShadow: '0 0 30px rgba(20, 184, 166, 0.5), 0 0 60px rgba(16, 185, 129, 0.3)'
+          }} />
           {/* Anel animado ao redor */}
           <motion.div
             className="absolute inset-0 rounded-full border-4 border-amber-400/50"
@@ -989,24 +1002,49 @@ export default function Portfolio() {
               <span className="text-sm font-medium">Desenvolvedor Full Stack</span>
             </motion.div>
 
-            <TypeAnimation
-              sequence={[
-                "Emerson Morales Jr",
-                1000,
-                "Desenvolvedor Full Stack",
-                1000,
-                "UI/UX Designer",
-                1000,
-                "Criador de Experiências",
-                1000,
-              ]}
-              wrapper="h1"
-              cursor={true}
-              repeat={Infinity}
-              style={{ display: "inline-block" }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient"
-              deletionSpeed={70}
-            />
+            <div className="relative">
+              <TypeAnimation
+                sequence={[
+                  "Emerson Morales Jr",
+                  1000,
+                  "Desenvolvedor Full Stack",
+                  1000,
+                  "UI/UX Designer",
+                  1000,
+                  "Criador de Experiências",
+                  1000,
+                  "Futurista Digital",
+                  1000,
+                ]}
+                wrapper="h1"
+                cursor={true}
+                repeat={Infinity}
+                style={{ display: "inline-block" }}
+                className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient relative z-10"
+                deletionSpeed={70}
+              />
+              {/* Efeito de brilho neon */}
+              <div className="absolute inset-0 text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent blur-xl opacity-50 animate-pulse" style={{ zIndex: 0 }}>
+                <TypeAnimation
+                  sequence={[
+                    "Emerson Morales Jr",
+                    1000,
+                    "Desenvolvedor Full Stack",
+                    1000,
+                    "UI/UX Designer",
+                    1000,
+                    "Criador de Experiências",
+                    1000,
+                    "Futurista Digital",
+                    1000,
+                  ]}
+                  wrapper="span"
+                  cursor={false}
+                  repeat={Infinity}
+                  deletionSpeed={70}
+                />
+              </div>
+            </div>
 
             <motion.p
               initial={{ opacity: 0 }}
@@ -1147,11 +1185,15 @@ export default function Portfolio() {
         />
       </header>
 
-      {/* About Me Section - Melhorado */}
+      {/* About Me Section - Futurista */}
       <section
         id="sobre"
-        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden"
+        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-gray-900 via-black to-gray-900 overflow-hidden"
       >
+        {/* Efeitos de fundo futurista */}
+        <div className="absolute inset-0 futuristic-grid opacity-10"></div>
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-5"></div>
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-5"></div>
         {/* Video Background */}
         <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-900/70 to-emerald-900/70 z-10"></div>
@@ -1209,10 +1251,10 @@ export default function Portfolio() {
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-16 md:mb-20 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent">
+              <span className="relative z-10 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
                 Sobre Mim
               </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-200/40 dark:bg-teal-800/40 z-0 rounded-full"></span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1226,10 +1268,10 @@ export default function Portfolio() {
             <div>
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-200 dark:text-gray-200 mb-6"
+                className="text-lg leading-relaxed text-gray-300 mb-6"
               >
                 Sou um{" "}
-                <span className="font-semibold text-teal-600 dark:text-teal-400">
+                <span className="font-semibold text-teal-400 neon-text">
                   Desenvolvedor Full Stack
                 </span>{" "}
                 com experiência em criar soluções digitais completas, desde o
@@ -1240,11 +1282,11 @@ export default function Portfolio() {
 
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-200 dark:text-gray-300 mb-8 md:mb-10"
+                className="text-lg leading-relaxed text-gray-300 mb-8 md:mb-10"
               >
                 Com background em desenvolvimento web e mobile, trabalho com
                 tecnologias modernas como{" "}
-                <span className="font-medium text-teal-600 dark:text-teal-400">
+                <span className="font-medium text-teal-400">
                   React, Node.js, Flutter e Spring Boot
                 </span>
                 . Acredito na combinação de código limpo, boas práticas e design
@@ -1252,37 +1294,21 @@ export default function Portfolio() {
               </motion.p>
 
               <motion.div variants={itemVariant}>
-                <h3 className="text-2xl font-bold mb-8 text-gray-200 dark:text-gray-200 flex items-center gap-2">
+                <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-white flex items-center gap-2">
                   <FiCode className="text-teal-400" />
-                  Habilidades:
+                  <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+                    Habilidades Tecnológicas:
+                  </span>
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
                   {skills.map((skill, index) => (
-                    <motion.div
+                    <HologramCard
                       key={index}
-                      variants={itemVariant}
-                      whileHover={{ y: -8, scale: 1.05, rotate: 2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="group relative overflow-hidden p-6 bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all border border-white/20 dark:border-gray-700"
-                    >
-                      <motion.div
-                        className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                        initial={{ scale: 0 }}
-                        whileHover={{ scale: 1 }}
-                      />
-                      <div className="flex flex-col items-center relative z-10">
-                        <motion.div
-                          className="mb-4"
-                          whileHover={{ rotate: 360, scale: 1.2 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          {skill.icon}
-                        </motion.div>
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-white transition-colors text-center">
-                          {skill.name}
-                        </span>
-                      </div>
-                    </motion.div>
+                      title={skill.name}
+                      description={`Domínio avançado em ${skill.name} com experiência em projetos de grande escala.`}
+                      icon={skill.icon}
+                      delay={index * 0.1}
+                    />
                   ))}
                 </div>
               </motion.div>
@@ -1349,6 +1375,40 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* Seção de Minigame Interativo */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black px-6 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
+          >
+            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+              🎮 Minigame Interativo
+            </span>
+          </motion.h2>
+          <SpaceGame />
+        </div>
+      </section>
+
+      {/* Terminal Futurista */}
+      <section className="py-20 bg-gradient-to-b from-black to-gray-900 px-6 relative">
+        <div className="max-w-4xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
+          >
+            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+              💻 Terminal Interativo
+            </span>
+          </motion.h2>
+          <Terminal />
+        </div>
+      </section>
+
       {/* Metrics Section - Melhorado com contadores animados */}
       <section className="py-16 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-700 text-white dark:bg-gray-900 relative overflow-hidden">
         {/* Efeito de ondas */}
@@ -1370,31 +1430,54 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Projects Section */}
+      {/* Projects Section - Timeline 3D Futurista */}
       <section
         id="projetos"
-        className="py-16 bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 relative"
+        className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 px-4 sm:px-6 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto">
+        {/* Efeitos de fundo */}
+        <div className="absolute inset-0 futuristic-grid opacity-20"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white"
+            className="text-4xl md:text-5xl font-extrabold mb-16 text-center"
           >
-            Meus Projetos
+            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
+              Meus Projetos
+            </span>
           </motion.h2>
+          
+          {/* Timeline 3D - Mostrar apenas em telas grandes */}
+          <div className="hidden lg:block">
+            <Timeline3D projects={filteredProjects} />
+          </div>
+          
+          {/* Carrossel para mobile/tablet */}
+          <div className="lg:hidden">
 
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex bg-white dark:bg-gray-700 rounded-full p-1 shadow">
+          {/* Filtros futuristas */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex justify-center mb-16"
+          >
+            <div className="inline-flex bg-gray-800/50 backdrop-blur-md rounded-full p-1 border border-teal-500/50 shadow-xl">
               {["all", "web", "mobile"].map((filter) => (
-                <button
+                <motion.button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
                     activeFilter === filter
-                      ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                      ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/50"
+                      : "text-gray-400 hover:text-white hover:bg-gray-700/50"
                   }`}
                   aria-label={`Filtrar projetos por ${
                     filter === "all"
@@ -1405,16 +1488,17 @@ export default function Portfolio() {
                   }`}
                 >
                   {filter === "all"
-                    ? "Todos"
+                    ? "🌐 Todos"
                     : filter === "web"
-                    ? "Web"
-                    : "Mobile"}
-                </button>
+                    ? "💻 Web"
+                    : "📱 Mobile"}
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="px-2">
+          {/* Carrossel para visualização alternativa */}
+          <div className="px-2 block lg:hidden">
             <Slider {...sliderSettings}>
               {filteredProjects.map((project) => (
                 <div key={project.id} className="px-2 outline-none">
@@ -1647,24 +1731,29 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section - Futurista */}
       <section
         id="contato"
-        className="py-16 bg-gray-50 dark:bg-gray-800 px-6 relative"
+        className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 px-6 relative overflow-hidden"
       >
-        <div className="max-w-6xl mx-auto">
-          <div className="absolute -right-20 top-1/3 w-60 h-60 bg-emerald-500 rounded-full filter blur-3xl opacity-10 dark:opacity-5 -z-10"></div>
-
+        {/* Efeitos de fundo */}
+        <div className="absolute inset-0 futuristic-grid opacity-10"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
+        
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             variants={itemVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-12 md:mb-16 text-center text-gray-900 dark:text-white"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-12 md:mb-16 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10">Vamos Conversar</span>
-              <span className="absolute bottom-1 left-0 w-full h-3 bg-teal-200/60 dark:bg-teal-800/60 z-0"></span>
+              <span className="relative z-10 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
+                Vamos Conversar
+              </span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1678,14 +1767,14 @@ export default function Portfolio() {
             <div>
               <motion.h3
                 variants={itemVariant}
-                className="text-2xl md:text-3xl font-bold mb-4 text-teal-600 dark:text-teal-400"
+                className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent"
               >
                 Pronto para começar seu projeto?
               </motion.h3>
 
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-8"
+                className="text-lg leading-relaxed text-gray-300 mb-8"
               >
                 Estou disponível para oportunidades de freelance e colaborações.
                 Se você tem uma ideia ou projeto em mente, ou simplesmente quer
@@ -1752,19 +1841,25 @@ export default function Portfolio() {
 
             <motion.form
               variants={itemVariant}
-              className="bg-white dark:bg-gray-700 p-6 md:p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-600 relative overflow-hidden backdrop-blur-sm"
+              className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 p-6 md:p-8 rounded-2xl shadow-2xl border-2 border-teal-500/50 relative overflow-hidden backdrop-blur-md hologram-scan"
               onSubmit={handleSubmit}
               ref={formRef}
             >
               {/* Efeito de fundo decorativo */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full filter blur-3xl opacity-5 -z-10"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
+              
+              {/* Linhas de scan */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
+              </div>
               
               <div className="relative z-10">
               <div className="mb-6">
                 <label
                   htmlFor="name"
-                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                  className="block text-gray-300 mb-2 font-medium"
                 >
                   Nome
                 </label>
@@ -1779,11 +1874,11 @@ export default function Portfolio() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${
+                    className={`w-full pl-10 pr-4 py-3 border-2 ${
                       formErrors.name
                         ? "border-red-500"
-                        : "border-gray-300 dark:border-gray-600"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                        : "border-teal-500/50"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
                     placeholder="Seu nome completo"
                     aria-describedby={
                       formErrors.name ? "name-error" : undefined
@@ -1800,7 +1895,7 @@ export default function Portfolio() {
               <div className="mb-6">
                 <label
                   htmlFor="email"
-                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                  className="block text-gray-300 mb-2 font-medium"
                 >
                   Email
                 </label>
@@ -1815,11 +1910,11 @@ export default function Portfolio() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${
+                    className={`w-full pl-10 pr-4 py-3 border-2 ${
                       formErrors.email
                         ? "border-red-500"
-                        : "border-gray-300 dark:border-gray-600"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                        : "border-teal-500/50"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
                     placeholder="seu@email.com"
                     aria-describedby={
                       formErrors.email ? "email-error" : undefined
@@ -1836,7 +1931,7 @@ export default function Portfolio() {
               <div className="mb-6">
                 <label
                   htmlFor="message"
-                  className="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                  className="block text-gray-300 mb-2 font-medium"
                 >
                   Mensagem
                 </label>
@@ -1851,11 +1946,11 @@ export default function Portfolio() {
                     rows="5"
                     value={formData.message}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border ${
+                    className={`w-full pl-10 pr-4 py-3 border-2 ${
                       formErrors.message
                         ? "border-red-500"
-                        : "border-gray-300 dark:border-gray-600"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition text-gray-700 dark:text-gray-300 dark:bg-gray-800`}
+                        : "border-teal-500/50"
+                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
                     placeholder="Conte-me sobre seu projeto..."
                     aria-describedby={
                       formErrors.message ? "message-error" : undefined
@@ -1907,8 +2002,12 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Footer - Melhorado */}
-      <footer className="bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white py-16 relative overflow-hidden">
+      {/* Footer - Futurista */}
+      <footer className="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white py-16 relative overflow-hidden border-t-2 border-teal-500/50">
+        {/* Efeitos de fundo */}
+        <div className="absolute inset-0 futuristic-grid opacity-10"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
         {/* Efeitos de fundo */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
