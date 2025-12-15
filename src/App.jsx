@@ -1459,46 +1459,45 @@ export default function Portfolio() {
           
           {/* Carrossel para mobile/tablet */}
           <div className="lg:hidden">
-
-          {/* Filtros futuristas */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex justify-center mb-16"
-          >
-            <div className="inline-flex bg-gray-800/50 backdrop-blur-md rounded-full p-1 border border-teal-500/50 shadow-xl">
-              {["all", "web", "mobile"].map((filter) => (
-                <motion.button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
-                    activeFilter === filter
-                      ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/50"
-                      : "text-gray-400 hover:text-white hover:bg-gray-700/50"
-                  }`}
-                  aria-label={`Filtrar projetos por ${
-                    filter === "all"
-                      ? "todos"
+            {/* Filtros futuristas */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-center mb-16"
+            >
+              <div className="inline-flex bg-gray-800/50 backdrop-blur-md rounded-full p-1 border border-teal-500/50 shadow-xl">
+                {["all", "web", "mobile"].map((filter) => (
+                  <motion.button
+                    key={filter}
+                    onClick={() => setActiveFilter(filter)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
+                      activeFilter === filter
+                        ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/50"
+                        : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                    }`}
+                    aria-label={`Filtrar projetos por ${
+                      filter === "all"
+                        ? "todos"
+                        : filter === "web"
+                        ? "web"
+                        : "mobile"
+                    }`}
+                  >
+                    {filter === "all"
+                      ? "🌐 Todos"
                       : filter === "web"
-                      ? "web"
-                      : "mobile"
-                  }`}
-                >
-                  {filter === "all"
-                    ? "🌐 Todos"
-                    : filter === "web"
-                    ? "💻 Web"
-                    : "📱 Mobile"}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
+                      ? "💻 Web"
+                      : "📱 Mobile"}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
 
-          {/* Carrossel para visualização alternativa */}
-          <div className="px-2 block lg:hidden">
+            {/* Carrossel para visualização alternativa */}
+            <div className="px-2">
             <Slider {...sliderSettings}>
               {filteredProjects.map((project) => (
                 <div key={project.id} className="px-2 outline-none">
@@ -1635,6 +1634,7 @@ export default function Portfolio() {
                 </div>
               ))}
             </Slider>
+            </div>
           </div>
         </div>
       </section>
@@ -2008,7 +2008,6 @@ export default function Portfolio() {
         <div className="absolute inset-0 futuristic-grid opacity-10"></div>
         <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
-        {/* Efeitos de fundo */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
