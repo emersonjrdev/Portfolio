@@ -36,11 +36,11 @@ import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import Scene3D from "./components/Scene3D";
-import MatrixGame from "./components/MatrixGame";
+import SpellGame from "./components/SpellGame";
 import Terminal from "./components/Terminal";
 import HologramCard from "./components/HologramCard";
 import Timeline3D from "./components/Timeline3D";
-import FuturisticLoader from "./components/FuturisticLoader";
+import MagicLoader from "./components/MagicLoader";
 
 // Componente de contador animado
 function CounterCard({ metric, delay }) {
@@ -513,16 +513,16 @@ export default function Portfolio() {
       ? projects
       : projects.filter((project) => project.category === activeFilter);
 
-  // Loading Screen Futurista
+  // Loading Screen Mágico
   if (isLoading) {
-    return <FuturisticLoader onComplete={() => setIsLoading(false)} />;
+    return <MagicLoader onComplete={() => setIsLoading(false)} />;
   }
 
   return (
     <div
       className={`min-h-screen ${
-        darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
-      } font-sans selection:bg-cyan-500 selection:text-white transition-colors duration-300 overflow-x-hidden relative`}
+        darkMode ? "dark bg-slate-900 text-gray-100" : "bg-slate-50 text-gray-900"
+      } font-sans selection:bg-yellow-500 selection:text-black transition-colors duration-300 overflow-x-hidden relative`}
     >
       {/* Partículas de fundo */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -548,9 +548,9 @@ export default function Portfolio() {
         }}
       />
 
-      {/* Scroll progress bar melhorado */}
+      {/* Scroll progress bar mágico */}
       <motion.div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 z-50 shadow-lg"
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 z-50 shadow-lg"
         style={{ width: `${scrollProgress}%` }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -757,7 +757,7 @@ export default function Portfolio() {
       {/* Header Section - Futurista com 3D */}
       <header 
         ref={heroRef}
-        className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-black flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
+        className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
       >
         {/* Cena 3D de fundo - Ocultar em mobile para performance */}
         <div className="hidden md:block absolute inset-0 z-0 opacity-30">
@@ -1103,15 +1103,38 @@ export default function Portfolio() {
         />
       </header>
 
-      {/* About Me Section - Futurista */}
+      {/* Seção O Mago - Sobre Mim */}
       <section
         id="sobre"
-        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-gray-900 via-black to-gray-900 overflow-hidden"
+        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 overflow-hidden"
       >
-        {/* Efeitos de fundo futurista */}
-        <div className="absolute inset-0 futuristic-grid opacity-10"></div>
-        <div className="absolute top-1/4 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-5"></div>
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-5"></div>
+        {/* Efeitos mágicos de fundo */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-yellow-300"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                fontSize: `${Math.random() * 15 + 8}px`,
+              }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.2, 0],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
+        </div>
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
         {/* Video Background */}
         <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-cyan-900/70 z-10"></div>
@@ -1172,10 +1195,10 @@ export default function Portfolio() {
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-16 md:mb-20 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
-                Sobre Mim
+              <span className="relative z-10 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
+                🧙 O Mago
               </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-500/20 z-0 rounded-full blur-xl"></span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-yellow-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1216,9 +1239,9 @@ export default function Portfolio() {
 
               <motion.div variants={itemVariant}>
                 <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-white flex items-center gap-2">
-                  <FiCode className="text-teal-400" />
-                  <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
-                    Habilidades Tecnológicas:
+                  <span className="text-3xl">📜</span>
+                  <span className="bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                    Poções e Feitiços:
                   </span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
@@ -1296,40 +1319,35 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Seção de Minigame Matrix - Melhorado */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 via-purple-900 to-black px-6 relative overflow-hidden">
-        {/* Vídeo de fundo */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50 z-10"></div>
-          <div className="absolute inset-0 w-full h-full">
-            <ReactPlayer
-              url="/coding-bg.mp4"
-              playing
-              loop
-              muted
-              width="100%"
-              height="100%"
+      {/* Seção de Jogo de Feitiços */}
+      <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
+        {/* Efeitos mágicos de fundo */}
+        <div className="absolute inset-0 z-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-slate-900/50 z-10"></div>
+          {/* Estrelas mágicas */}
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-yellow-300"
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                fontSize: `${Math.random() * 20 + 10}px`,
               }}
-              config={{
-                file: {
-                  attributes: {
-                    style: {
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%",
-                    },
-                  },
-                },
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
+                rotate: [0, 360],
               }}
-            />
-          </div>
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -1339,11 +1357,11 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-extrabold mb-12 text-center"
           >
-            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent neon-text">
-              🎮 MATRIX GAME
+            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
+              🪄 JOGO DE FEITIÇOS
             </span>
           </motion.h2>
-          <MatrixGame />
+          <SpellGame />
         </div>
       </section>
 
@@ -1364,8 +1382,8 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Metrics Section - Melhorado com contadores animados */}
-      <section className="py-16 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-700 text-white dark:bg-gray-900 relative overflow-hidden">
+      {/* Metrics Section - Mágico */}
+      <section className="py-16 bg-gradient-to-r from-amber-800 via-yellow-700 to-amber-800 text-white relative overflow-hidden">
         {/* Efeito de ondas */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -1385,15 +1403,38 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Projects Section - Timeline 3D Futurista */}
+      {/* Projects Section - Grimório */}
       <section
         id="projetos"
-        className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 px-4 sm:px-6 relative overflow-hidden"
+        className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-4 sm:px-6 relative overflow-hidden"
       >
-        {/* Efeitos de fundo */}
-        <div className="absolute inset-0 futuristic-grid opacity-20"></div>
-        <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
+        {/* Efeitos mágicos de fundo */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(40)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-yellow-300"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                fontSize: `${Math.random() * 12 + 6}px`,
+              }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.2, 0],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
+        </div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
         
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
@@ -1402,8 +1443,8 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-extrabold mb-16 text-center"
           >
-            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
-              Meus Projetos
+            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
+              📖 Grimório de Projetos
             </span>
           </motion.h2>
           
@@ -1421,34 +1462,34 @@ export default function Portfolio() {
               viewport={{ once: true }}
               className="flex justify-center mb-16"
             >
-              <div className="inline-flex bg-gray-800/50 backdrop-blur-md rounded-full p-1 border border-teal-500/50 shadow-xl">
-                {["all", "web", "mobile"].map((filter) => (
-                  <motion.button
-                    key={filter}
-                    onClick={() => setActiveFilter(filter)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
-                      activeFilter === filter
-                        ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/50"
-                        : "text-gray-400 hover:text-white hover:bg-gray-700/50"
-                    }`}
-                    aria-label={`Filtrar projetos por ${
-                      filter === "all"
-                        ? "todos"
-                        : filter === "web"
-                        ? "web"
-                        : "mobile"
-                    }`}
-                  >
-                    {filter === "all"
-                      ? "🌐 Todos"
+            <div className="inline-flex bg-slate-800/50 backdrop-blur-md rounded-full p-1 border border-yellow-500/50 shadow-xl">
+              {["all", "web", "mobile"].map((filter) => (
+                <motion.button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
+                    activeFilter === filter
+                      ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-lg shadow-yellow-500/50"
+                      : "text-gray-400 hover:text-yellow-400 hover:bg-slate-700/50"
+                  }`}
+                  aria-label={`Filtrar projetos por ${
+                    filter === "all"
+                      ? "todos"
                       : filter === "web"
-                      ? "💻 Web"
-                      : "📱 Mobile"}
-                  </motion.button>
-                ))}
-              </div>
+                      ? "web"
+                      : "mobile"
+                  }`}
+                >
+                  {filter === "all"
+                    ? "✨ Todos"
+                    : filter === "web"
+                    ? "🪄 Web"
+                    : "📱 Mobile"}
+                </motion.button>
+              ))}
+            </div>
             </motion.div>
 
             {/* Carrossel para visualização alternativa */}
@@ -1470,8 +1511,8 @@ export default function Portfolio() {
                     
                     {/* Badge de categoria */}
                     <div className="absolute top-4 right-4 z-20">
-                      <span className="px-3 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-                        {project.category === "mobile" ? "📱 Mobile" : "🌐 Web"}
+                      <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
+                        {project.category === "mobile" ? "📱 Mobile" : "🪄 Web"}
                       </span>
                     </div>
                     <motion.div
@@ -1505,7 +1546,7 @@ export default function Portfolio() {
                     </motion.div>
                     <div className="p-6">
                       <motion.h3 
-                        className="text-2xl font-bold mb-3 text-gray-900 dark:text-white bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                        className="text-2xl font-bold mb-3 text-gray-900 dark:text-white bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent"
                         whileHover={{ x: 5 }}
                       >
                         {project.title}
@@ -1543,7 +1584,7 @@ export default function Portfolio() {
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
                             whileHover={{ scale: 1.1, y: -2 }}
-                            className="text-xs bg-gradient-to-r from-teal-100 to-emerald-100 dark:from-teal-900/50 dark:to-emerald-900/50 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-full font-medium border border-teal-200 dark:border-teal-800"
+                            className="text-xs bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/50 dark:to-amber-900/50 text-yellow-800 dark:text-yellow-300 px-3 py-1.5 rounded-full font-medium border border-yellow-300 dark:border-yellow-700"
                           >
                             {tag}
                           </motion.span>
@@ -1551,10 +1592,10 @@ export default function Portfolio() {
                       </div>
                       
                       {/* Métricas com ícone */}
-                      <div className="mb-6 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                      <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl border border-yellow-300 dark:border-yellow-700">
                         <div className="flex items-center gap-2">
-                          <FiTrendingUp className="text-teal-600 dark:text-teal-400" />
-                          <span className="text-sm text-teal-700 dark:text-teal-300 font-semibold">
+                          <span className="text-xl">⚡</span>
+                          <span className="text-sm text-yellow-800 dark:text-yellow-300 font-semibold">
                             {project.metrics}
                           </span>
                         </div>
@@ -1565,23 +1606,23 @@ export default function Portfolio() {
                           href={project.links.demo}
                           whileHover={{ scale: 1.05, y: -2 }}
                           whileTap={{ scale: 0.95 }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-teal-500/50 transition-all group"
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all group"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <FiExternalLink className="group-hover:rotate-45 transition-transform" />
-                          <span>Demo</span>
+                          <span>Ver Feitiço</span>
                         </motion.a>
                         <motion.a
                           href={project.links.code}
                           whileHover={{ scale: 1.05, y: -2 }}
                           whileTap={{ scale: 0.95 }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all group border border-gray-200 dark:border-gray-700"
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-700 text-white rounded-xl font-semibold hover:bg-slate-600 transition-all group border border-slate-600"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <FiGithub className="group-hover:scale-110 transition-transform" />
-                          <span>Código</span>
+                          <span>Grimório</span>
                         </motion.a>
                       </div>
                     </div>
@@ -1594,40 +1635,32 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Seção de Tecnologias em Ação - Nova */}
-      <section className="py-20 bg-gradient-to-b from-black via-purple-900 to-black px-6 relative overflow-hidden">
-        {/* Vídeo de fundo */}
-        <div className="absolute inset-0 z-0 opacity-30">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black/50 z-10"></div>
-          <div className="absolute inset-0 w-full h-full">
-            <ReactPlayer
-              url="/coding-bg.mp4"
-              playing
-              loop
-              muted
-              width="100%"
-              height="100%"
+      {/* Seção de Casas de Hogwarts */}
+      <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
+        {/* Efeitos mágicos */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(60)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-yellow-300"
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                fontSize: `${Math.random() * 15 + 8}px`,
               }}
-              config={{
-                file: {
-                  attributes: {
-                    style: {
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%",
-                    },
-                  },
-                },
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.2, 0],
               }}
-            />
-          </div>
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
         </div>
         
         <div className="max-w-6xl mx-auto relative z-10">
@@ -1637,44 +1670,81 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-extrabold mb-16 text-center"
           >
-            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent neon-text">
-              🚀 Tecnologias em Ação
+            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
+              🏰 As Casas de Hogwarts
             </span>
           </motion.h2>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: '⚡', title: 'Performance', desc: 'Aplicações otimizadas e rápidas' },
-              { icon: '🎨', title: 'Design', desc: 'Interfaces modernas e intuitivas' },
-              { icon: '🔒', title: 'Segurança', desc: 'Código seguro e escalável' },
-            ].map((item, i) => (
+              { icon: '🦁', title: 'Grifinória', desc: 'Coragem e determinação', color: 'from-red-600 to-scarlet-600', border: 'border-red-500/50' },
+              { icon: '🦅', title: 'Corvinal', desc: 'Sabedoria e criatividade', color: 'from-blue-600 to-cyan-600', border: 'border-blue-500/50' },
+              { icon: '🦡', title: 'Lufa-Lufa', desc: 'Lealdade e trabalho duro', color: 'from-yellow-600 to-amber-600', border: 'border-yellow-500/50' },
+              { icon: '🐍', title: 'Sonserina', desc: 'Ambição e astúcia', color: 'from-green-600 to-emerald-600', border: 'border-green-500/50' },
+            ].map((house, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30, rotateY: -90 }}
+                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                className="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 backdrop-blur-md p-8 rounded-2xl border-2 border-cyan-500/50 shadow-2xl"
+                transition={{ delay: i * 0.15, duration: 0.6 }}
+                whileHover={{ scale: 1.1, y: -10, rotateY: 10 }}
+                className={`bg-gradient-to-br ${house.color} backdrop-blur-md p-6 rounded-2xl border-2 ${house.border} shadow-2xl relative overflow-hidden`}
               >
-                <div className="text-5xl mb-4">{item.icon}</div>
-                <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
-                <p className="text-gray-300">{item.desc}</p>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3,
+                    ease: 'linear',
+                  }}
+                />
+                <div className="relative z-10 text-center">
+                  <div className="text-6xl mb-4">{house.icon}</div>
+                  <h3 className="text-2xl font-bold text-white mb-2">{house.title}</h3>
+                  <p className="text-white/90">{house.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section - Futurista */}
+      {/* Contact Section - Coruja Mensageira */}
       <section
         id="contato"
-        className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 px-6 relative overflow-hidden"
+        className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden"
       >
-        {/* Efeitos de fundo */}
-        <div className="absolute inset-0 futuristic-grid opacity-10"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full filter blur-3xl opacity-10"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
+        {/* Efeitos mágicos */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-yellow-300"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                fontSize: `${Math.random() * 15 + 8}px`,
+              }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.2, 0],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
+        </div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
         
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
@@ -1685,10 +1755,10 @@ export default function Portfolio() {
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-12 md:mb-16 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent neon-text">
-                Vamos Conversar
+              <span className="relative z-10 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
+                🦉 Envie uma Coruja
               </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-teal-500/20 z-0 rounded-full blur-xl"></span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-yellow-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1702,9 +1772,9 @@ export default function Portfolio() {
             <div>
               <motion.h3
                 variants={itemVariant}
-                className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent"
+                className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent"
               >
-                Pronto para começar seu projeto?
+                Pronto para uma aventura mágica?
               </motion.h3>
 
               <motion.p
@@ -1937,8 +2007,8 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Footer - Futurista */}
-      <footer className="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white py-16 relative overflow-hidden border-t-2 border-teal-500/50">
+      {/* Footer - Mágico */}
+      <footer className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 text-white py-16 relative overflow-hidden border-t-2 border-yellow-500/50">
         {/* Efeitos de fundo */}
         <div className="absolute inset-0 futuristic-grid opacity-10"></div>
         <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
@@ -1958,25 +2028,25 @@ export default function Portfolio() {
               viewport={{ once: true }}
               className="text-center md:text-left"
             >
-              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
-                Pronto para transformar sua ideia em realidade?
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent">
+                Pronto para uma jornada mágica?
               </h3>
               <motion.a
                 href="#contato"
                 whileHover={{ scale: 1.1, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-white to-amber-50 text-teal-900 px-8 py-4 rounded-full font-bold shadow-2xl hover:shadow-amber-500/50 transition-all relative overflow-hidden"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-8 py-4 rounded-full font-bold shadow-2xl hover:shadow-yellow-500/50 transition-all relative overflow-hidden"
               >
-                <span className="relative z-10">Vamos Conversar</span>
+                <span className="relative z-10">Enviar Coruja</span>
                 <motion.span
-                  className="relative z-10"
-                  animate={{ x: [0, 5, 0] }}
+                  className="relative z-10 text-2xl"
+                  animate={{ rotate: [0, 15, -15, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-                  →
+                  🦉
                 </motion.span>
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400"
+                  className="absolute inset-0 bg-gradient-to-r from-amber-500 to-yellow-500"
                   initial={{ x: "-100%" }}
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.3 }}
@@ -2040,7 +2110,7 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="border-t border-white/20 w-full pt-8 text-center"
           >
-            <p className="text-xl mb-3 font-semibold">Vamos criar algo incrível juntos! 🚀</p>
+            <p className="text-xl mb-3 font-semibold">Vamos criar magia juntos! ✨🪄</p>
             <p className="text-sm opacity-80">
               © {new Date().getFullYear()} Emerson Morales Junior. Todos os
               direitos reservados.
@@ -2061,7 +2131,7 @@ export default function Portfolio() {
             whileHover={{ scale: 1.15, y: -5, rotate: 360 }}
             whileTap={{ scale: 0.9 }}
             style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 100 }}
-            className="bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all group relative overflow-hidden"
+            className="bg-gradient-to-r from-yellow-500 via-amber-600 to-yellow-500 text-black p-4 rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all group relative overflow-hidden"
           >
             {/* Efeito de brilho no hover */}
             <motion.div
