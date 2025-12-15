@@ -43,7 +43,7 @@ export default function MagicLoader({ onComplete }) {
   }, [progress, onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-50 flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-50 overflow-hidden" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {/* Estrelas mágicas - Reduzido para performance */}
       <div className="absolute inset-0">
         {[...Array(20)].map((_, i) => (
@@ -96,7 +96,7 @@ export default function MagicLoader({ onComplete }) {
       </div>
 
       {/* Conteúdo principal */}
-      <div className="relative z-10 text-center">
+      <div className="relative z-10 text-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         {/* Logo/Título */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
