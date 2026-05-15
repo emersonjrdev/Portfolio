@@ -34,9 +34,8 @@ import "slick-carousel/slick/slick-theme.css";
 import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import Terminal from "./components/Terminal";
+import FuturisticLoader from "./components/FuturisticLoader";
 import HologramCard from "./components/HologramCard";
-import MagicLoader from "./components/MagicLoader";
 
 // Lazy loading de componentes pesados
 const Scene3D = lazy(() => import("./components/Scene3D"));
@@ -46,7 +45,6 @@ export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
-  const [activeFilter, setActiveFilter] = useState("all");
   const [darkMode, setDarkMode] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -370,7 +368,7 @@ export default function Portfolio() {
       id: 1,
       title: "ConnectWork",
       description:
-        "Sistema em produção para aproximar freelancers e empresas: perfis, vagas e fluxo pensado para uso real no dia a dia.",
+        "Plataforma em produção para aproximar freelancers e empresas: perfis, vagas e fluxo pensado para o dia a dia.",
       tags: ["React", "Node.js", "MySQL", "Tailwind"],
       category: "web",
       image: "/connect.png",
@@ -378,53 +376,78 @@ export default function Portfolio() {
         demo: "https://connectwork.site",
         code: "https://github.com/emersonjrdev",
       },
-      metrics: "Publicado em connectwork.site",
+      metrics: "Domínio: connectwork.site",
       features: ["Área logada", "Fluxo de vagas e cadastro"],
-      challenges: "Alinhar UX para dois públicos distintos (talentos e empresas)",
+      challenges: "UX para dois públicos (talentos e empresas)",
     },
     {
       id: 2,
+      title: "Sistema NSS Senhora",
+      description:
+        "Sistema web para gerenciar servidores do altar — painel e rotinas administrativas conforme o repositório no GitHub.",
+      tags: ["JavaScript", "React", "Vercel"],
+      category: "web",
+      image: null,
+      links: {
+        demo: "https://servidoresaltar.vercel.app",
+        code: "https://github.com/emersonjrdev/Sistema_Nss_Senhora",
+      },
+      metrics: "Deploy: servidoresaltar.vercel.app",
+      features: ["Gestão de servidores", "Interface web"],
+      challenges: "Organizar dados e permissões de forma clara",
+    },
+    {
+      id: 3,
+      title: "Jusato Doces Artesanais",
+      description:
+        "Site da Jusato Doces Artesanais — vitrine e experiência do negócio (código no repositório CrazyFoods no GitHub).",
+      tags: ["JavaScript", "React", "Vercel"],
+      category: "web",
+      image: null,
+      links: {
+        demo: "https://crazy-foods.vercel.app",
+        code: "https://github.com/emersonjrdev/CrazyFoods",
+      },
+      metrics: "Deploy atual na Vercel · repo: CrazyFoods",
+      features: ["Vitrine do negócio", "Deploy contínuo"],
+      challenges: "Alinhar identidade da marca com a implementação",
+    },
+    {
+      id: 4,
+      title: "Sistema de comandas — lanchonete",
+      description:
+        "Fluxo de comandas para lanchonete, com foco em pedidos e operação do balcão.",
+      tags: ["JavaScript", "React", "Vercel"],
+      category: "web",
+      image: null,
+      links: {
+        demo: "https://sistema-comandas-lanchonete.vercel.app",
+        code: "https://github.com/emersonjrdev/sistema-comandas-lanchonete",
+      },
+      metrics: "Em produção na Vercel",
+      features: ["Pedidos", "Fluxo para balcão"],
+      challenges: "Manter o fluxo simples em horário de pico",
+    },
+    {
+      id: 5,
       title: "Este portfólio",
       description:
-        "Site pessoal com modo claro/escuro, animações e seções interativas — o mesmo código deste repositório.",
+        "Site pessoal com modo claro/escuro, animações e formulário de contato — este repositório.",
       tags: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
       category: "web",
       image: "/Portfolio1.png",
       links: {
-        demo: "https://emersondev.vercel.app",
+        demo: "https://portfolio-nu-three-72.vercel.app",
         code: "https://github.com/emersonjrdev/Portfolio",
       },
-      metrics: "Deploy na Vercel · código aberto no GitHub",
-      features: ["Responsivo", "Tema claro/escuro", "Formulário de contato"],
-      challenges: "Equilibrar efeitos visuais e desempenho em dispositivos variados",
-    },
-    {
-      id: 3,
-      title: "ConnectWork (mobile)",
-      description:
-        "Experiência mobile complementar à plataforma web; evolução contínua junto ao produto principal.",
-      tags: ["React Native", "Node.js", "MySQL"],
-      category: "mobile",
-      image: "/Mobile.png",
-      links: {
-        demo: null,
-        code: "https://github.com/emersonjrdev",
-      },
-      metrics: "Demo pública do app: em definição (acompanhe no GitHub)",
-      features: ["Integração com a mesma API do web", "Foco em usabilidade em tela pequena"],
-      challenges: "Manter paridade de recursos com a versão web de forma sustentável",
+      metrics: "Homepage definida no GitHub (Vercel)",
+      features: ["Responsivo", "Tema claro/escuro", "Contato por e-mail"],
+      challenges: "Performance com animações e conteúdo rico",
     },
   ];
 
-
-  const filteredProjects =
-    activeFilter === "all"
-      ? projects
-      : projects.filter((project) => project.category === activeFilter);
-
-  // Loading Screen Mágico
   if (isLoading) {
-    return <MagicLoader onComplete={() => setIsLoading(false)} />;
+    return <FuturisticLoader onComplete={() => setIsLoading(false)} />;
   }
 
   return (
@@ -466,7 +489,7 @@ export default function Portfolio() {
         }}
       />
 
-      {/* Scroll progress bar mágico */}
+      {/* Barra de progresso de scroll */}
       <motion.div
         className="fixed top-0 left-0 h-1 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 z-50 shadow-lg"
         style={{ width: `${scrollProgress}%` }}
@@ -802,13 +825,8 @@ export default function Portfolio() {
             }}
             className="absolute -bottom-2 -right-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-xl backdrop-blur-sm"
           >
-            <span className="flex items-center gap-1">
-              <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ repeat: Infinity, duration: 1 }}
-              >
-                ✨
-              </motion.span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
               Disponível para projetos
             </span>
           </motion.div>
@@ -993,37 +1011,11 @@ export default function Portfolio() {
         id="sobre"
         className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
       >
-        {/* Efeitos mágicos de fundo - Reduzido */}
-        <div className="absolute inset-0 opacity-15">
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-yellow-300"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 10 + 6}px`,
-              }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 4,
-                ease: "easeInOut",
-              }}
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
-        <div className="absolute top-1/4 left-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-violet-600/15 rounded-full filter blur-3xl opacity-40" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-3xl opacity-35" />
         {/* Video Background - Desabilitado em mobile */}
         <div className="hidden lg:block absolute inset-0 overflow-hidden z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-amber-900/70 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-violet-950/70 z-10"></div>
           <div className="absolute inset-0 w-full h-full">
             <ReactPlayer
               url="/coding-bg.mp4"
@@ -1062,7 +1054,7 @@ export default function Portfolio() {
 
         {/* Imagem de fundo apenas para mobile */}
         <div className="md:hidden absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-900/70 to-emerald-900/70 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 to-violet-950/75 z-10"></div>
           <img
             src="/coding-bg.png"
             alt="Background"
@@ -1207,23 +1199,6 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Terminal Futurista */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900 px-6 relative">
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
-          >
-            <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent font-display">
-              Terminal interativo
-            </span>
-          </motion.h2>
-          <Terminal />
-        </div>
-      </section>
-
       {/* O que priorizo — sem números inventados */}
       <section className="py-16 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white relative overflow-hidden border-y border-white/5">
         <div className="absolute inset-0 opacity-[0.07]">
@@ -1275,32 +1250,6 @@ export default function Portfolio() {
         id="projetos"
         className="py-20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 relative overflow-hidden"
       >
-        {/* Efeitos mágicos de fundo - Reduzido */}
-        <div className="absolute inset-0 opacity-15">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-yellow-300"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 8 + 5}px`,
-              }}
-              animate={{
-                opacity: [0, 0.5, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: "easeInOut",
-              }}
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
         <div className="absolute top-0 left-0 w-96 h-96 bg-violet-600/20 rounded-full filter blur-3xl opacity-25" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-fuchsia-600/15 rounded-full filter blur-3xl opacity-25" />
         
@@ -1319,53 +1268,14 @@ export default function Portfolio() {
           {/* Timeline 3D - Mostrar apenas em telas grandes */}
           <div className="hidden lg:block">
             <Suspense fallback={<div className="h-96 flex items-center justify-center text-violet-300">Carregando projetos…</div>}>
-              <Timeline3D projects={filteredProjects} />
+              <Timeline3D projects={projects} />
             </Suspense>
           </div>
           
           {/* Carrossel para mobile/tablet */}
-          <div className="lg:hidden">
-            {/* Filtros futuristas */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="flex justify-center mb-16"
-            >
-            <div className="inline-flex bg-slate-800/60 backdrop-blur-md rounded-full p-1 border border-white/10 shadow-xl">
-              {["all", "web", "mobile"].map((filter) => (
-                <motion.button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-3 text-sm font-semibold rounded-full transition-all ${
-                    activeFilter === filter
-                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/30"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  }`}
-                  aria-label={`Filtrar projetos por ${
-                    filter === "all"
-                      ? "todos"
-                      : filter === "web"
-                      ? "web"
-                      : "mobile"
-                  }`}
-                >
-                  {filter === "all"
-                    ? "Todos"
-                    : filter === "web"
-                    ? "Web"
-                    : "Mobile"}
-                </motion.button>
-              ))}
-            </div>
-            </motion.div>
-
-            {/* Carrossel para visualização alternativa */}
-            <div className="px-2">
+          <div className="lg:hidden px-2">
             <Slider {...sliderSettings}>
-              {filteredProjects.map((project) => {
+              {projects.map((project) => {
                 const demoUrl =
                   project.links?.demo &&
                   project.links.demo !== "#" &&
@@ -1387,37 +1297,32 @@ export default function Portfolio() {
                     
                     <div className="absolute top-4 right-4 z-20">
                       <span className="px-3 py-1 bg-white/10 text-violet-200 text-xs font-semibold rounded-full border border-white/15 backdrop-blur-sm">
-                        {project.category === "mobile" ? "Mobile" : "Web"}
+                        Web
                       </span>
                     </div>
                     <motion.div
-                      className={`
-                      relative overflow-hidden 
-                      ${
-                        project.category === "mobile"
-                          ? "pt-[100%] bg-slate-900/50"
-                          : "pt-[56.25%] bg-slate-900/40"
-                      }
-                    `}
-                      whileHover={{ scale: 1.05 }}
+                      className="relative overflow-hidden pt-[56.25%] bg-slate-900/50"
+                      whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className={`
-                          absolute top-0 left-0 w-full h-full 
-                          ${
-                            project.category === "mobile"
-                              ? "object-contain p-6"
-                              : "object-cover"
-                          }
-                          transition-transform duration-500 group-hover:scale-110
-                        `}
-                        loading="lazy"
-                      />
-                      {/* Overlay no hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {project.image ? (
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-violet-950/90 to-slate-950 p-6 text-center">
+                          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-violet-300/70">
+                            Web
+                          </span>
+                          <span className="mt-3 text-base font-semibold text-white/95 leading-snug px-2">
+                            {project.title}
+                          </span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                     </motion.div>
                     <div className="p-6">
                       <motion.h3 
@@ -1506,7 +1411,6 @@ export default function Portfolio() {
                 </div>
               );})}
             </Slider>
-            </div>
           </div>
         </div>
       </section>
@@ -1558,34 +1462,8 @@ export default function Portfolio() {
         id="contato"
         className="py-20 bg-gradient-to-b from-slate-900 to-slate-950 px-6 relative overflow-hidden border-t border-white/5"
       >
-        {/* Efeitos mágicos - Reduzido */}
-        <div className="absolute inset-0 opacity-15">
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-yellow-300"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 8 + 5}px`,
-              }}
-              animate={{
-                opacity: [0, 0.5, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: "easeInOut",
-              }}
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/15 rounded-full filter blur-3xl opacity-25" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-fuchsia-600/10 rounded-full filter blur-3xl opacity-25" />
         
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
@@ -1622,8 +1500,7 @@ export default function Portfolio() {
                 variants={itemVariant}
                 className="text-lg leading-relaxed text-slate-400 mb-8"
               >
-                Estou aberto a freelas e colaborações. Se quiser falar sobre o ConnectWork,
-                sobre este portfólio ou um novo projeto, use o formulário ou o e-mail.
+                Estou aberto a freelas e colaborações. Fale sobre o ConnectWork, os sistemas na Vercel ou um novo projeto — use o formulário ou o e-mail.
               </motion.p>
 
               <motion.div variants={itemVariant} className="space-y-4">

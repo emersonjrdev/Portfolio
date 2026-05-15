@@ -3,16 +3,15 @@ import { motion } from 'framer-motion';
 
 export default function FuturisticLoader({ onComplete }) {
   const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState('Inicializando sistema...');
+  const [loadingText, setLoadingText] = useState('Inicializando…');
 
   const loadingMessages = [
-    'Inicializando sistema...',
-    'Carregando módulos 3D...',
-    'Conectando à matrix...',
-    'Sincronizando partículas...',
-    'Ativando efeitos neon...',
-    'Preparando experiência...',
-    'Sistema pronto!',
+    'Inicializando…',
+    'Carregando interface…',
+    'Preparando conteúdo…',
+    'Otimizando recursos…',
+    'Quase pronto…',
+    'Bem-vindo.',
   ];
 
   useEffect(() => {
@@ -43,12 +42,12 @@ export default function FuturisticLoader({ onComplete }) {
   }, [progress, onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 z-50 flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 z-50 flex flex-col items-center justify-center overflow-hidden">
       {/* Efeito de grid animado */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(cyan 1px, transparent 1px),
-                            linear-gradient(90deg, cyan 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(167, 139, 250, 0.25) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(167, 139, 250, 0.25) 1px, transparent 1px)`,
           backgroundSize: '50px 50px',
           animation: 'gridMove 20s linear infinite',
         }}></div>
@@ -59,7 +58,7 @@ export default function FuturisticLoader({ onComplete }) {
         {[...Array(50)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-cyan-400 rounded-full"
+            className="absolute w-2 h-2 bg-violet-400 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -87,23 +86,23 @@ export default function FuturisticLoader({ onComplete }) {
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           className="mb-8"
         >
-          <h1 className="text-6xl md:text-8xl font-extrabold mb-4">
-            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient">
-              PORTFOLIO
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 font-sans">
+            <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent animate-gradient">
+              Emerson Morales Jr
             </span>
           </h1>
-          <div className="flex items-center justify-center gap-2 text-cyan-400">
-            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-            <span className="text-sm font-mono">SYSTEM ONLINE</span>
-            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+          <div className="flex items-center justify-center gap-2 text-violet-300/90">
+            <div className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
+            <span className="text-xs font-mono tracking-widest uppercase">carregando</span>
+            <div className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
           </div>
         </motion.div>
 
         {/* Barra de progresso */}
         <div className="w-80 md:w-96 mb-6">
-          <div className="relative h-2 bg-gray-800 rounded-full overflow-hidden border border-cyan-500/50">
+          <div className="relative h-2 bg-gray-800 rounded-full overflow-hidden border border-violet-500/50">
             <motion.div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500"
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}
@@ -122,7 +121,7 @@ export default function FuturisticLoader({ onComplete }) {
             </motion.div>
           </div>
           <motion.p
-            className="text-cyan-400 font-mono text-sm mt-2"
+            className="text-violet-400 font-mono text-sm mt-2"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
           >
@@ -146,7 +145,7 @@ export default function FuturisticLoader({ onComplete }) {
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="w-3 h-3 rounded-full bg-cyan-400"
+              className="w-3 h-3 rounded-full bg-violet-400"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.5, 1, 0.5],
@@ -173,7 +172,7 @@ export default function FuturisticLoader({ onComplete }) {
           ease: 'linear',
         }}
       >
-        <div className="w-full h-1 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent"></div>
+        <div className="w-full h-1 bg-gradient-to-b from-transparent via-violet-400/50 to-transparent"></div>
       </motion.div>
 
       <style>{`
