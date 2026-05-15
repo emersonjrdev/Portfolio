@@ -6,13 +6,10 @@ import {
   FiArrowUp,
   FiLinkedin,
   FiInstagram,
-  FiMail,
-  FiUser,
   FiMessageSquare,
   FiX,
   FiSun,
   FiMoon,
-  FiLoader,
   FiCode,
   FiTrendingUp,
 } from "react-icons/fi";
@@ -25,17 +22,18 @@ import {
   SiFigma,
   SiTailwindcss,
   SiNextdotjs,
+  SiWhatsapp,
 } from "react-icons/si";
 import ReactPlayer from "react-player/lazy";
 import { TypeAnimation } from "react-type-animation";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import emailjs from '@emailjs/browser';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import FuturisticLoader from "./components/FuturisticLoader";
 import HologramCard from "./components/HologramCard";
+import { resolveProjectCardImage } from "./utils/projectPreviewImage";
 
 // Lazy loading de componentes pesados
 const Scene3D = lazy(() => import("./components/Scene3D"));
@@ -44,21 +42,10 @@ const Timeline3D = lazy(() => import("./components/Timeline3D"));
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [formErrors, setFormErrors] = useState({});
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const formRef = useRef(null);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll();
@@ -232,64 +219,6 @@ export default function Portfolio() {
     localStorage.setItem("darkMode", JSON.stringify(newMode));
   };
 
-  const validateForm = () => {
-    const errors = {};
-    if (!formData.name.trim()) errors.name = "Nome é obrigatório";
-    if (!formData.email.trim()) {
-      errors.email = "Email é obrigatório";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "Email inválido";
-    }
-    if (!formData.message.trim()) errors.message = "Mensagem é obrigatória";
-    return errors;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Clear error when typing
-    if (formErrors[name]) {
-      setFormErrors((prev) => ({
-        ...prev,
-        [name]: null,
-      }));
-    }
-  };
-
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  const errors = validateForm();
-
-  if (Object.keys(errors).length > 0) {
-    setFormErrors(errors);
-    return;
-  }
-
-  setIsSubmitting(true);
-  setSubmitError(null);
-
-  try {
-    await emailjs.sendForm(
-      'service_b2z9q76', // Service ID
-      'template_0l66x1j', // Template ID (apenas o ID, não a URL)
-      formRef.current,    // Referência do formulário
-      'M2Oi0QCK_uZqjog2H' // Public Key
-    );
-
-    setShowThankYouModal(true);
-    setFormData({ name: "", email: "", message: "" });
-  } catch (error) {
-    console.error("Erro ao enviar:", error);
-    setSubmitError("Ocorreu um erro. Tente novamente mais tarde.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
   // Animation variants
   const sectionVariant = {
     hidden: { opacity: 0, y: 40 },
@@ -371,10 +300,8 @@ export default function Portfolio() {
         "Plataforma em produção para aproximar freelancers e empresas: perfis, vagas e fluxo pensado para o dia a dia.",
       tags: ["React", "Node.js", "MySQL", "Tailwind"],
       category: "web",
-      image: "/connect.png",
       links: {
         demo: "https://connectwork.site",
-        code: "https://github.com/emersonjrdev",
       },
       metrics: "Domínio: connectwork.site",
       features: ["Área logada", "Fluxo de vagas e cadastro"],
@@ -384,13 +311,11 @@ export default function Portfolio() {
       id: 2,
       title: "Sistema NSS Senhora",
       description:
-        "Sistema web para gerenciar servidores do altar — painel e rotinas administrativas conforme o repositório no GitHub.",
+        "Sistema web para gerenciar servidores do altar — painel e rotinas administrativas.",
       tags: ["JavaScript", "React", "Vercel"],
       category: "web",
-      image: null,
       links: {
         demo: "https://servidoresaltar.vercel.app",
-        code: "https://github.com/emersonjrdev/Sistema_Nss_Senhora",
       },
       metrics: "Deploy: servidoresaltar.vercel.app",
       features: ["Gestão de servidores", "Interface web"],
@@ -400,48 +325,42 @@ export default function Portfolio() {
       id: 3,
       title: "Jusato Doces Artesanais",
       description:
-        "Site da Jusato Doces Artesanais — vitrine e experiência do negócio (código no repositório CrazyFoods no GitHub).",
+        "Site da Jusato Confeitaria — doces artesanais premium.",
       tags: ["JavaScript", "React", "Vercel"],
       category: "web",
-      image: null,
       links: {
-        demo: "https://crazy-foods.vercel.app",
-        code: "https://github.com/emersonjrdev/CrazyFoods",
+        demo: "https://jusatodoces.vercel.app",
       },
-      metrics: "Deploy atual na Vercel · repo: CrazyFoods",
-      features: ["Vitrine do negócio", "Deploy contínuo"],
+      metrics: "Site: jusatodoces.vercel.app",
+      features: ["Vitrine da confeitaria", "Deploy na Vercel"],
       challenges: "Alinhar identidade da marca com a implementação",
     },
     {
       id: 4,
-      title: "Sistema de comandas — lanchonete",
+      title: "Restaurante da Andréa — protótipo",
       description:
-        "Fluxo de comandas para lanchonete, com foco em pedidos e operação do balcão.",
+        "Protótipo do site do restaurante (presença online e cardápio).",
       tags: ["JavaScript", "React", "Vercel"],
       category: "web",
-      image: null,
       links: {
-        demo: "https://sistema-comandas-lanchonete.vercel.app",
-        code: "https://github.com/emersonjrdev/sistema-comandas-lanchonete",
+        demo: "https://prototipo-fr.vercel.app",
       },
-      metrics: "Em produção na Vercel",
-      features: ["Pedidos", "Fluxo para balcão"],
-      challenges: "Manter o fluxo simples em horário de pico",
+      metrics: "Deploy: prototipo-fr.vercel.app",
+      features: ["Layout do restaurante", "Experiência de navegação"],
+      challenges: "Entregar protótipo claro para evolução do projeto",
     },
     {
       id: 5,
       title: "Este portfólio",
       description:
-        "Site pessoal com modo claro/escuro, animações e formulário de contato — este repositório.",
+        "Site pessoal com modo claro/escuro, animações e contacto direto por WhatsApp.",
       tags: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
       category: "web",
-      image: "/Portfolio1.png",
       links: {
         demo: "https://portfolio-nu-three-72.vercel.app",
-        code: "https://github.com/emersonjrdev/Portfolio",
       },
-      metrics: "Homepage definida no GitHub (Vercel)",
-      features: ["Responsivo", "Tema claro/escuro", "Contato por e-mail"],
+      metrics: "Deploy na Vercel",
+      features: ["Responsivo", "Tema claro/escuro", "Contato por WhatsApp"],
       challenges: "Performance com animações e conteúdo rico",
     },
   ];
@@ -511,106 +430,6 @@ export default function Portfolio() {
         {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
       </button>
 
-      {/* Thank You Modal */}
-      <AnimatePresence>
-        {showThankYouModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", damping: 20 }}
-              className={`${
-                darkMode
-                  ? "dark:bg-gray-800 dark:border-gray-700"
-                  : "bg-white border-gray-100"
-              } rounded-xl w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 p-6 md:p-8 relative shadow-2xl border`}
-            >
-              <button
-                onClick={() => setShowThankYouModal(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition"
-                aria-label="Fechar modal"
-              >
-                <FiX size={24} />
-              </button>
-
-              <div className="text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className={`w-20 h-20 ${
-                    darkMode ? "dark:bg-emerald-900/30" : "bg-emerald-50"
-                  } rounded-full flex items-center justify-center mx-auto mb-6`}
-                >
-                  <svg
-                    className="w-10 h-10 text-emerald-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                </motion.div>
-
-                <h3
-                  className={`text-2xl md:text-3xl font-bold mb-3 ${
-                    darkMode ? "dark:text-white" : "text-gray-800"
-                  }`}
-                >
-                  Mensagem Enviada!
-                </h3>
-                <p
-                  className={`${
-                    darkMode ? "dark:text-gray-300" : "text-gray-600"
-                  } mb-6`}
-                >
-                  Obrigado pelo seu contato. Responderei o mais breve possível.
-                </p>
-
-                {/* <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                  className={`w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-bold hover:shadow-lg transition-all ${
-                    isSubmitting ? "opacity-80 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <FiLoader className="animate-spin" />
-                      Enviando...
-                    </span>
-                  ) : (
-                    "Enviar Mensagem"
-                  )}
-                </motion.button> */}
-
-                {submitError && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-4 text-red-500 text-center"
-                  >
-                    {submitError}
-                  </motion.p>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
@@ -670,7 +489,11 @@ export default function Portfolio() {
                   },
                   {
                     icon: <FiInstagram size={28} />,
-                    url: "https://www.instagram.com/emersxn_jr",
+                    url: "https://www.instagram.com/emersxn.jr/",
+                  },
+                  {
+                    icon: <SiWhatsapp size={28} />,
+                    url: "https://wa.me/5511980673729",
                   },
                   {
                     icon: <FiGithub size={28} />,
@@ -926,13 +749,15 @@ export default function Portfolio() {
                 <FiExternalLink className="opacity-90 group-hover:translate-x-0.5 transition-transform" size={18} />
               </motion.a>
               <motion.a
-                href="#contato"
+                href="https://wa.me/5511980673729"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ y: -5, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-8 py-4 border border-white/25 backdrop-blur-sm text-white font-semibold rounded-full hover:bg-white/10 transition-all"
               >
-                <FiMail size={18} />
-                <span>Falar comigo</span>
+                <SiWhatsapp size={20} />
+                <span>WhatsApp</span>
               </motion.a>
             </motion.div>
 
@@ -1282,6 +1107,7 @@ export default function Portfolio() {
                   String(project.links.demo).trim() !== ""
                     ? project.links.demo
                     : null;
+                const cardImage = resolveProjectCardImage(project);
                 return (
                 <div key={project.id} className="px-2 outline-none">
                   <motion.div
@@ -1305,12 +1131,13 @@ export default function Portfolio() {
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.3 }}
                     >
-                      {project.image ? (
+                      {cardImage ? (
                         <img
-                          src={project.image}
-                          alt={project.title}
-                          className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          src={cardImage}
+                          alt={`Pré-visualização de ${project.title}`}
+                          className="absolute top-0 left-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105 bg-slate-900"
                           loading="lazy"
+                          referrerPolicy="no-referrer"
                         />
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-violet-950/90 to-slate-950 p-6 text-center">
@@ -1380,32 +1207,21 @@ export default function Portfolio() {
                         </div>
                       </div>
                       
-                      <div className={`flex gap-3 ${demoUrl ? "flex-col sm:flex-row" : ""}`}>
-                        {demoUrl && (
-                        <motion.a
-                          href={demoUrl}
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FiExternalLink />
-                          <span>Abrir site</span>
-                        </motion.a>
-                        )}
-                        <motion.a
-                          href={project.links.code}
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`flex items-center justify-center gap-2 px-4 py-3 bg-slate-900/80 text-white rounded-xl font-semibold hover:bg-slate-900 transition-all border border-white/10 ${demoUrl ? "flex-1" : "w-full"}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FiGithub />
-                          <span>Ver no GitHub</span>
-                        </motion.a>
-                      </div>
+                      {demoUrl && (
+                        <div className="flex gap-3 flex-col sm:flex-row">
+                          <motion.a
+                            href={demoUrl}
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FiExternalLink />
+                            <span>Abrir site</span>
+                          </motion.a>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 </div>
@@ -1486,240 +1302,59 @@ export default function Portfolio() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 gap-12 md:gap-16"
+            className="max-w-lg mx-auto text-center"
           >
-            <div>
-              <motion.h3
-                variants={itemVariant}
-                className="text-2xl md:text-3xl font-bold mb-4 font-display bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent"
-              >
-                Vamos conversar?
-              </motion.h3>
-
-              <motion.p
-                variants={itemVariant}
-                className="text-lg leading-relaxed text-slate-400 mb-8"
-              >
-                Estou aberto a freelas e colaborações. Fale sobre o ConnectWork, os sistemas na Vercel ou um novo projeto — use o formulário ou o e-mail.
-              </motion.p>
-
-              <motion.div variants={itemVariant} className="space-y-4">
-                <div className="flex items-start">
-                  <div className="bg-teal-100 dark:bg-teal-900/30 p-3 rounded-full mr-4 flex-shrink-0">
-                    <FiMail className="text-teal-600 dark:text-teal-400 text-xl" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Email
-                    </p>
-                    <a
-                      href="mailto:contato.juniormorales@gmail.com"
-                      className="text-lg font-medium hover:text-teal-600 dark:hover:text-teal-400 transition-colors text-gray-700 dark:text-gray-300"
-                    >
-                      contato.juniormorales@gmail.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="bg-teal-100 dark:bg-teal-900/30 p-3 rounded-full mr-4 flex-shrink-0">
-                    <FiLinkedin className="text-teal-600 dark:text-teal-400 text-xl" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      LinkedIn
-                    </p>
-                    <a
-                      href="https://www.linkedin.com/in/emerson-morales-junior-6469b8231/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg font-medium hover:text-teal-600 dark:hover:text-teal-400 transition-colors text-gray-700 dark:text-gray-300"
-                    >
-                      Emerson Morales Junior
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="bg-teal-100 dark:bg-teal-900/30 p-3 rounded-full mr-4 flex-shrink-0">
-                    <FiGithub className="text-teal-600 dark:text-teal-400 text-xl" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      GitHub
-                    </p>
-                    <a
-                      href="https://github.com/emersonjrdev"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg font-medium hover:text-teal-600 dark:hover:text-teal-400 transition-colors text-gray-700 dark:text-gray-300"
-                    >
-                      emersonjrdev
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            <motion.form
+            <motion.h3
               variants={itemVariant}
-              className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 p-6 md:p-8 rounded-2xl shadow-2xl border-2 border-teal-500/50 relative overflow-hidden backdrop-blur-md hologram-scan"
-              onSubmit={handleSubmit}
-              ref={formRef}
+              className="text-2xl md:text-3xl font-bold mb-4 font-display bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent"
             >
-              {/* Efeito de fundo decorativo */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full filter blur-3xl opacity-10 -z-10"></div>
-              
-              {/* Linhas de scan */}
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
-              </div>
-              
-              <div className="relative z-10">
-              <div className="mb-6">
-                <label
-                  htmlFor="name"
-                  className="block text-gray-300 mb-2 font-medium"
-                >
-                  Nome
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiUser className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border-2 ${
-                      formErrors.name
-                        ? "border-red-500"
-                        : "border-teal-500/50"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
-                    placeholder="Seu nome completo"
-                    aria-describedby={
-                      formErrors.name ? "name-error" : undefined
-                    }
-                  />
-                </div>
-                {formErrors.name && (
-                  <p id="name-error" className="text-red-500 text-sm mt-1">
-                    {formErrors.name}
-                  </p>
-                )}
-              </div>
+              Vamos conversar?
+            </motion.h3>
 
-              <div className="mb-6">
-                <label
-                  htmlFor="email"
-                  className="block text-gray-300 mb-2 font-medium"
-                >
-                  Email
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiMail className="text-gray-400" />
-                  </div>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border-2 ${
-                      formErrors.email
-                        ? "border-red-500"
-                        : "border-teal-500/50"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
-                    placeholder="seu@email.com"
-                    aria-describedby={
-                      formErrors.email ? "email-error" : undefined
-                    }
-                  />
-                </div>
-                {formErrors.email && (
-                  <p id="email-error" className="text-red-500 text-sm mt-1">
-                    {formErrors.email}
-                  </p>
-                )}
-              </div>
+            <motion.p
+              variants={itemVariant}
+              className="text-lg leading-relaxed text-slate-400 mb-8"
+            >
+              Freelas e novos projetos: fala comigo pelo{" "}
+              <strong className="text-white">WhatsApp</strong> — é por lá que
+              respondo mais rápido.
+            </motion.p>
 
-              <div className="mb-6">
-                <label
-                  htmlFor="message"
-                  className="block text-gray-300 mb-2 font-medium"
-                >
-                  Mensagem
-                </label>
-                <div className="relative">
-                  <div className="absolute top-3 left-3">
-                    <FiMessageSquare className="text-gray-400" />
-                  </div>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows="5"
-                    value={formData.message}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border-2 ${
-                      formErrors.message
-                        ? "border-red-500"
-                        : "border-teal-500/50"
-                    } rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition bg-gray-800/50 text-gray-300 placeholder-gray-500`}
-                    placeholder="Conte-me sobre seu projeto..."
-                    aria-describedby={
-                      formErrors.message ? "message-error" : undefined
-                    }
-                  ></textarea>
-                </div>
-                {formErrors.message && (
-                  <p id="message-error" className="text-red-500 text-sm mt-1">
-                    {formErrors.message}
-                  </p>
-                )}
-              </div>
+            <motion.a
+              variants={itemVariant}
+              href="https://wa.me/5511980673729"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white text-lg font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all w-full sm:w-auto"
+            >
+              <SiWhatsapp className="text-2xl" />
+              Abrir WhatsApp
+            </motion.a>
+            <p className="text-slate-500 text-sm mt-4">(11) 98067-3729</p>
 
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: isSubmitting ? 1 : 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-4 px-6 rounded-xl font-bold hover:shadow-xl hover:shadow-teal-500/50 transition-all relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+            <motion.div
+              variants={itemVariant}
+              className="flex flex-wrap justify-center gap-8 mt-12 text-sm"
+            >
+              <a
+                href="https://www.linkedin.com/in/emerson-morales-junior-6469b8231/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-violet-300 transition-colors"
               >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  {isSubmitting ? (
-                    <>
-                      <FiLoader className="animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    <>
-                      Enviar Mensagem
-                      <motion.span
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5 }}
-                      >
-                        →
-                      </motion.span>
-                    </>
-                  )}
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.button>
-              </div>
-            </motion.form>
+                LinkedIn
+              </a>
+              <a
+                href="https://www.instagram.com/emersxn.jr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-violet-300 transition-colors"
+              >
+                Instagram
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -1749,13 +1384,15 @@ export default function Portfolio() {
                 Bora construir algo útil?
               </h3>
               <motion.a
-                href="#contato"
+                href="https://wa.me/5511980673729"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 transition-all"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all"
               >
-                <span className="relative z-10">Ir para contato</span>
-                <FiMail className="relative z-10" size={20} />
+                <span className="relative z-10">Falar no WhatsApp</span>
+                <SiWhatsapp className="relative z-10" size={20} />
               </motion.a>
             </motion.div>
 
@@ -1774,9 +1411,15 @@ export default function Portfolio() {
                 },
                 {
                   icon: <FiInstagram size={28} />,
-                  url: "https://www.instagram.com/emersxn_jr",
+                  url: "https://www.instagram.com/emersxn.jr/",
                   label: "Instagram",
                   color: "from-pink-500 to-purple-600",
+                },
+                {
+                  icon: <SiWhatsapp size={28} />,
+                  url: "https://wa.me/5511980673729",
+                  label: "WhatsApp",
+                  color: "from-emerald-500 to-green-600",
                 },
                 {
                   icon: <FiGithub size={28} />,

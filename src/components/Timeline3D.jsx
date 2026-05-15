@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiCode, FiExternalLink, FiGithub } from 'react-icons/fi';
+import { FiCode, FiExternalLink } from 'react-icons/fi';
+import { resolveProjectCardImage } from '../utils/projectPreviewImage';
 
 export default function Timeline3D({ projects = [] }) {
   return (
@@ -9,7 +10,9 @@ export default function Timeline3D({ projects = [] }) {
       <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-violet-500 via-fuchsia-500 to-cyan-500 opacity-35"></div>
       
       <div className="space-y-20">
-        {projects.map((project, index) => (
+        {projects.map((project, index) => {
+          const cardImage = resolveProjectCardImage(project);
+          return (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
@@ -39,6 +42,17 @@ export default function Timeline3D({ projects = [] }) {
                 </div>
 
                 <div className="relative z-10">
+                  {cardImage && (
+                    <div className="mb-4 rounded-xl overflow-hidden border border-white/10 aspect-video bg-slate-900/80">
+                      <img
+                        src={cardImage}
+                        alt={`Pré-visualização de ${project.title}`}
+                        className="w-full h-full object-cover object-top"
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
                     <FiCode className="text-violet-400 text-xl md:text-2xl" />
                     <h3 className="text-lg md:text-2xl font-bold text-white">{project.title}</h3>
@@ -73,19 +87,6 @@ export default function Timeline3D({ projects = [] }) {
                           Ver ao vivo
                         </motion.a>
                       )}
-                    {project.links?.code && (
-                      <motion.a
-                        href={project.links.code}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg font-semibold hover:bg-gray-600 transition-all border border-gray-600"
-                      >
-                        <FiGithub />
-                        Código
-                      </motion.a>
-                    )}
                   </div>
                 </div>
               </motion.div>
@@ -94,7 +95,8 @@ export default function Timeline3D({ projects = [] }) {
             {/* Espaço vazio do outro lado */}
             <div className="hidden md:block w-5/12"></div>
           </motion.div>
-        ))}
+        );
+        })}
       </div>
     </div>
   );
