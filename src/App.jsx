@@ -14,7 +14,6 @@ import {
   FiMoon,
   FiLoader,
   FiCode,
-  FiZap,
   FiTrendingUp,
 } from "react-icons/fi";
 import {
@@ -43,96 +42,6 @@ import MagicLoader from "./components/MagicLoader";
 const Scene3D = lazy(() => import("./components/Scene3D"));
 const Timeline3D = lazy(() => import("./components/Timeline3D"));
 
-// Componente de contador animado
-function CounterCard({ metric, delay }) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [isVisible]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const duration = 2000;
-    const steps = 60;
-    const increment = metric.value / steps;
-    const stepDuration = duration / steps;
-
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= metric.value) {
-        setCount(metric.value);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, stepDuration);
-
-    return () => clearInterval(timer);
-  }, [isVisible, metric.value]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.5 }}
-      whileHover={{ scale: 1.05, y: -5 }}
-      className="p-8 backdrop-blur-md bg-white/10 dark:bg-gray-800/50 rounded-2xl hover:bg-white/20 dark:hover:bg-gray-700/50 transition-all border border-white/20 dark:border-gray-700 shadow-xl relative overflow-hidden group"
-    >
-      {/* Efeito de brilho no hover */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-        initial={{ x: "-100%" }}
-        whileHover={{ x: "100%" }}
-        transition={{ duration: 0.6 }}
-      />
-      
-      <div className="relative z-10">
-        <motion.div
-          className="text-amber-300 mb-4 flex justify-center"
-          whileHover={{ rotate: 360, scale: 1.2 }}
-          transition={{ duration: 0.5 }}
-        >
-          {metric.icon}
-        </motion.div>
-        <motion.p
-          className="text-5xl md:text-6xl font-extrabold mb-2 bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent"
-          key={count}
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.2 }}
-        >
-          {count}{metric.suffix}
-        </motion.p>
-        <p className="text-lg opacity-90">{metric.label}</p>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Portfolio() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -153,7 +62,6 @@ export default function Portfolio() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [cursorVariant, setCursorVariant] = useState("default");
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -208,10 +116,10 @@ export default function Portfolio() {
     },
     particles: {
       color: {
-        value: "#14b8a6",
+        value: "#a78bfa",
       },
       links: {
-        color: "#14b8a6",
+        color: "#818cf8",
         distance: 150,
         enable: true,
         opacity: 0.3,
@@ -462,7 +370,7 @@ export default function Portfolio() {
       id: 1,
       title: "ConnectWork",
       description:
-        "Plataforma profissional para conexão e colaboração entre freelancers e empresas com sistema de matchmaking inteligente.",
+        "Sistema em produção para aproximar freelancers e empresas: perfis, vagas e fluxo pensado para uso real no dia a dia.",
       tags: ["React", "Node.js", "MySQL", "Tailwind"],
       category: "web",
       image: "/connect.png",
@@ -470,41 +378,41 @@ export default function Portfolio() {
         demo: "https://connectwork.site",
         code: "https://github.com/emersonjrdev",
       },
-      metrics: "Aumentou engajamento em 40%",
-      features: ["ChatBot", "Sistema de vagas"],
-      challenges: "Garantir a experiência entre empresas e alunos",
+      metrics: "Publicado em connectwork.site",
+      features: ["Área logada", "Fluxo de vagas e cadastro"],
+      challenges: "Alinhar UX para dois públicos distintos (talentos e empresas)",
     },
     {
       id: 2,
-      title: "Portfolio Moderno",
+      title: "Este portfólio",
       description:
-        "Template de portfólio profissional com design responsivo, modo escuro/claro e animações fluidas.",
-      tags: ["React", "Tailwind CSS", "Framer Motion"],
+        "Site pessoal com modo claro/escuro, animações e seções interativas — o mesmo código deste repositório.",
+      tags: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
       category: "web",
       image: "/Portfolio1.png",
       links: {
         demo: "https://emersondev.vercel.app",
-        code: "https://github.com/emersonjrdev",
+        code: "https://github.com/emersonjrdev/Portfolio",
       },
-      metrics: "Melhorou conversão em 25%",
-      features: ["Design responsivo", "Modo escuro/claro", "SEO otimizado"],
-      challenges: "Criar animações fluidas sem prejudicar performance",
+      metrics: "Deploy na Vercel · código aberto no GitHub",
+      features: ["Responsivo", "Tema claro/escuro", "Formulário de contato"],
+      challenges: "Equilibrar efeitos visuais e desempenho em dispositivos variados",
     },
     {
       id: 3,
-      title: "ConnectWork App",
+      title: "ConnectWork (mobile)",
       description:
-        "Aplicativo móvel da plataforma ConnectWork com notificações em tempo real e chat integrado.",
+        "Experiência mobile complementar à plataforma web; evolução contínua junto ao produto principal.",
       tags: ["React Native", "Node.js", "MySQL"],
       category: "mobile",
       image: "/Mobile.png",
       links: {
-        demo: "#",
+        demo: null,
         code: "https://github.com/emersonjrdev",
       },
-      metrics: "4.8/5 avaliações na Play Store",
-      features: ["Notificações push", "Offline-first"],
-      challenges: "Garantir experiência consistente entre plataformas",
+      metrics: "Demo pública do app: em definição (acompanhe no GitHub)",
+      features: ["Integração com a mesma API do web", "Foco em usabilidade em tela pequena"],
+      challenges: "Manter paridade de recursos com a versão web de forma sustentável",
     },
   ];
 
@@ -521,9 +429,9 @@ export default function Portfolio() {
 
   return (
     <div
-      className={`min-h-screen ${
-        darkMode ? "dark bg-slate-900 text-gray-100" : "bg-slate-50 text-gray-900"
-      } font-sans selection:bg-yellow-500 selection:text-black transition-colors duration-300 overflow-x-hidden relative`}
+      className={`min-h-screen font-sans selection:bg-violet-500/40 selection:text-white ${
+        darkMode ? "dark bg-slate-950 text-gray-100" : "bg-slate-50 text-gray-900"
+      } transition-colors duration-300 overflow-x-hidden relative`}
     >
       {/* Partículas de fundo - Desabilitado em mobile */}
       <div className="hidden lg:block fixed inset-0 z-0 pointer-events-none">
@@ -546,7 +454,7 @@ export default function Portfolio() {
 
       {/* Cursor personalizado */}
       <motion.div
-        className="fixed top-0 left-0 w-6 h-6 bg-teal-500 rounded-full pointer-events-none z-[100] mix-blend-difference"
+        className="fixed top-0 left-0 w-6 h-6 bg-violet-500 rounded-full pointer-events-none z-[100] mix-blend-difference"
         animate={{
           x: mousePosition.x - 12,
           y: mousePosition.y - 12,
@@ -560,7 +468,7 @@ export default function Portfolio() {
 
       {/* Scroll progress bar mágico */}
       <motion.div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 z-50 shadow-lg"
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 z-50 shadow-lg"
         style={{ width: `${scrollProgress}%` }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -572,7 +480,7 @@ export default function Portfolio() {
         onClick={toggleDarkMode}
         className={`fixed top-8 left-8 p-2 rounded-full ${
           darkMode
-            ? "bg-white/10 text-amber-300"
+            ? "bg-white/10 text-violet-300"
             : "bg-gray-900/10 text-gray-900"
         } backdrop-blur-sm z-50 hover:bg-white/20 transition-all shadow-lg`}
         aria-label={darkMode ? "Light mode" : "Dark mode"}
@@ -688,11 +596,11 @@ export default function Portfolio() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "tween", ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 bg-gradient-to-br from-teal-900 to-emerald-900 z-40 flex flex-col items-center justify-center md:hidden"
+            className="fixed inset-0 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 z-40 flex flex-col items-center justify-center md:hidden"
           >
             <button
               onClick={toggleMenu}
-              className="absolute top-8 right-8 z-50 p-2 text-white hover:text-amber-300 transition-colors"
+              className="absolute top-8 right-8 z-50 p-2 text-white hover:text-violet-300 transition-colors"
               aria-label="Fechar menu"
             >
               <FiX size={28} />
@@ -713,11 +621,11 @@ export default function Portfolio() {
                         0.1 * ["sobre", "projetos", "contato"].indexOf(item),
                     }}
                   >
-                    <span className="relative z-10 capitalize group-hover:text-amber-300 transition-colors">
+                    <span className="relative z-10 capitalize group-hover:text-violet-300 transition-colors">
                       {item}
                     </span>
                     <motion.span
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-violet-400"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.3 }}
@@ -753,7 +661,7 @@ export default function Portfolio() {
                     rel="noopener noreferrer"
                     whileHover={{ y: -5, scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="text-white hover:text-amber-300 transition-colors p-2 rounded-full hover:bg-white/10"
+                    className="text-white hover:text-violet-300 transition-colors p-2 rounded-full hover:bg-white/10"
                   >
                     {social.icon}
                   </motion.a>
@@ -767,7 +675,7 @@ export default function Portfolio() {
       {/* Header Section - Futurista com 3D */}
       <header 
         ref={heroRef}
-        className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
+        className="relative bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 flex flex-col md:flex-row items-center text-white pt-24 pb-16 px-6 md:px-12 lg:px-24 min-h-screen overflow-hidden"
       >
         {/* Cena 3D de fundo - Ocultar em mobile e tablets para performance */}
         <div className="hidden lg:block absolute inset-0 z-0 opacity-20">
@@ -776,7 +684,7 @@ export default function Portfolio() {
           </Suspense>
         </div>
         {/* Efeito de gradiente animado */}
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 via-emerald-600/20 to-teal-600/20 animate-gradient-xy"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-600/25 via-fuchsia-600/15 to-cyan-600/20 animate-gradient-xy"></div>
         
         {/* Grid pattern de fundo */}
         <div className="absolute inset-0 opacity-10">
@@ -800,7 +708,7 @@ export default function Portfolio() {
             >
               <span className="capitalize relative z-10 font-medium">{item}</span>
               <motion.span
-                className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full"
+                className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full"
                 initial={{ scaleX: 0 }}
                 whileHover={{ scaleX: 1 }}
                 transition={{ duration: 0.3 }}
@@ -892,7 +800,7 @@ export default function Portfolio() {
               duration: 3,
               ease: "easeInOut",
             }}
-            className="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-400 to-yellow-400 text-teal-900 px-4 py-2 rounded-full text-xs font-bold shadow-xl backdrop-blur-sm"
+            className="absolute -bottom-2 -right-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-xl backdrop-blur-sm"
           >
             <span className="flex items-center gap-1">
               <motion.span
@@ -901,7 +809,7 @@ export default function Portfolio() {
               >
                 ✨
               </motion.span>
-              Disponível!
+              Disponível para projetos
             </span>
           </motion.div>
         </motion.div>
@@ -927,45 +835,40 @@ export default function Portfolio() {
                 animate={{ rotate: [0, 360] }}
                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
               >
-                <FiCode className="text-amber-300" />
+                <FiCode className="text-violet-300" />
               </motion.span>
-              <span className="text-sm font-medium">Desenvolvedor Full Stack</span>
+              <span className="text-sm font-medium tracking-wide">Full stack · Web &amp; mobile</span>
             </motion.div>
 
-            <div className="relative">
+            <div className="relative font-display">
               <TypeAnimation
                 sequence={[
                   "Emerson Morales Jr",
                   1000,
                   "Desenvolvedor Full Stack",
                   1000,
-                  "UI/UX Designer",
+                  "Front-end com React",
                   1000,
-                  "Criador de Experiências",
-                  1000,
-                  "Futurista Digital",
+                  "APIs com Node.js",
                   1000,
                 ]}
                 wrapper="h1"
                 cursor={true}
                 repeat={Infinity}
                 style={{ display: "inline-block" }}
-                className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient relative z-10"
+                className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-violet-300 via-fuchsia-200 to-cyan-300 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient relative z-10"
                 deletionSpeed={70}
               />
-              {/* Efeito de brilho neon */}
-              <div className="absolute inset-0 text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent blur-xl opacity-50 animate-pulse" style={{ zIndex: 0 }}>
+              <div className="absolute inset-0 text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-violet-400 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent blur-xl opacity-40 pointer-events-none" style={{ zIndex: 0 }}>
                 <TypeAnimation
                   sequence={[
                     "Emerson Morales Jr",
                     1000,
                     "Desenvolvedor Full Stack",
                     1000,
-                    "UI/UX Designer",
+                    "Front-end com React",
                     1000,
-                    "Criador de Experiências",
-                    1000,
-                    "Futurista Digital",
+                    "APIs com Node.js",
                     1000,
                   ]}
                   wrapper="span"
@@ -980,29 +883,13 @@ export default function Portfolio() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl lg:text-3xl opacity-90 mb-8 font-light"
+              className="text-lg md:text-xl lg:text-2xl text-slate-300 mb-8 max-w-xl md:max-w-none leading-relaxed"
             >
-              Criando magia digital com{" "}
-              <motion.span 
-                className="font-semibold text-yellow-400 inline-block"
-                whileHover={{ scale: 1.1, y: -2 }}
-              >
-                React
-              </motion.span>
-              {", "}
-              <motion.span 
-                className="font-semibold text-yellow-400 inline-block"
-                whileHover={{ scale: 1.1, y: -2 }}
-              >
-                Node.js
-              </motion.span>
-              {" e "}
-              <motion.span 
-                className="font-semibold text-yellow-400 inline-block"
-                whileHover={{ scale: 1.1, y: -2 }}
-              >
-                Feitiços
-              </motion.span>
+              Construo produtos web e mobile com{" "}
+              <span className="text-white font-semibold">React</span>,{" "}
+              <span className="text-white font-semibold">Node.js</span> e atenção a{" "}
+              <span className="text-white font-semibold">UI/UX</span>
+              . ConnectWork está no ar; este site é o meu laboratório visível.
             </motion.p>
 
             <motion.div
@@ -1013,73 +900,46 @@ export default function Portfolio() {
             >
               <motion.a
                 href="#projetos"
-                whileHover={{ y: -5, scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all relative overflow-hidden"
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold rounded-full shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
               >
-                <span className="relative z-10">Abrir Grimório</span>
-                <motion.span
-                  className="relative z-10 text-2xl"
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  📖
-                </motion.span>
-                <motion.span
-                  className="absolute inset-0 bg-gradient-to-r from-amber-500 to-yellow-500"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
+                <span>Ver projetos</span>
+                <FiExternalLink className="opacity-90 group-hover:translate-x-0.5 transition-transform" size={18} />
               </motion.a>
               <motion.a
                 href="#contato"
-                whileHover={{ y: -5, scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-yellow-400/50 backdrop-blur-sm text-yellow-300 font-bold rounded-full hover:bg-yellow-400/20 hover:border-yellow-400 transition-all relative overflow-hidden"
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 px-8 py-4 border border-white/25 backdrop-blur-sm text-white font-semibold rounded-full hover:bg-white/10 transition-all"
               >
-                <span className="relative z-10">Enviar Coruja</span>
-                <motion.span
-                  className="relative z-10 text-xl"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  🦉
-                </motion.span>
-                <motion.span
-                  className="absolute inset-0 bg-yellow-400/10"
-                  initial={{ scale: 0 }}
-                  whileHover={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
+                <FiMail size={18} />
+                <span>Falar comigo</span>
               </motion.a>
             </motion.div>
 
-            {/* Estatísticas rápidas */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className="flex flex-wrap justify-center md:justify-start gap-6 mt-12"
+              className="flex flex-wrap justify-center md:justify-start gap-4 mt-12"
             >
               {[
-                { icon: <FiCode />, value: "8+", label: "Projetos" },
-                { icon: <FiZap />, value: "100%", label: "Satisfação" },
-                { icon: <FiTrendingUp />, value: "3+", label: "Anos Exp." },
+                { emoji: "🌐", title: "ConnectWork", subtitle: "connectwork.site" },
+                { emoji: "⚡", title: "Stack", subtitle: "React · Node · TS" },
+                { emoji: "🛠️", title: "Freelance", subtitle: "Projetos sob medida" },
               ].map((stat, i) => (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
+                  key={stat.title}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 + i * 0.1 }}
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  className="text-center p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20"
+                  transition={{ delay: 1 + i * 0.08 }}
+                  whileHover={{ scale: 1.03, y: -4 }}
+                  className="text-left p-4 pr-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 min-w-[10rem]"
                 >
-                  <div className="text-yellow-400 text-3xl mb-2 flex justify-center">
-                    {stat.icon === <FiCode /> ? '🪄' : stat.icon === <FiZap /> ? '⚡' : '📈'}
-                  </div>
-                  <div className="text-3xl font-bold mb-1 text-white">{stat.value}</div>
-                  <div className="text-sm opacity-80 text-yellow-200">{stat.label}</div>
+                  <div className="text-2xl mb-1">{stat.emoji}</div>
+                  <div className="text-sm font-semibold text-white">{stat.title}</div>
+                  <div className="text-xs text-slate-400 mt-0.5">{stat.subtitle}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -1128,10 +988,10 @@ export default function Portfolio() {
         />
       </header>
 
-      {/* Seção O Mago - Sobre Mim */}
+      {/* Sobre */}
       <section
         id="sobre"
-        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 overflow-hidden"
+        className="py-20 md:py-28 px-6 relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
       >
         {/* Efeitos mágicos de fundo - Reduzido */}
         <div className="absolute inset-0 opacity-15">
@@ -1220,13 +1080,13 @@ export default function Portfolio() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-16 md:mb-20 text-center"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-16 md:mb-20 text-center font-display"
           >
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
-                🧙 O Mago
+              <span className="relative z-10 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">
+                Sobre mim
               </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-yellow-500/20 z-0 rounded-full blur-xl"></span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-violet-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1266,10 +1126,10 @@ export default function Portfolio() {
               </motion.p>
 
               <motion.div variants={itemVariant}>
-                <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-white flex items-center gap-2">
-                  <span className="text-3xl">📜</span>
-                  <span className="bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
-                    Poções e Feitiços:
+                <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-white flex items-center gap-2 font-display">
+                  <span className="text-2xl text-violet-400">◇</span>
+                  <span className="bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent">
+                    Stack e ferramentas
                   </span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
@@ -1277,7 +1137,7 @@ export default function Portfolio() {
                     <HologramCard
                       key={index}
                       title={skill.name}
-                      description={`Domínio avançado em ${skill.name} com experiência em projetos de grande escala.`}
+                      description={`Uso ${skill.name} em projetos reais — do layout à integração com APIs.`}
                       icon={skill.icon}
                       delay={index * 0.1}
                     />
@@ -1356,39 +1216,64 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
           >
-            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
-              💻 Terminal Interativo
+            <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent font-display">
+              Terminal interativo
             </span>
           </motion.h2>
           <Terminal />
         </div>
       </section>
 
-      {/* Metrics Section - Mágico */}
-      <section className="py-16 bg-gradient-to-r from-amber-800 via-yellow-700 to-amber-800 text-white relative overflow-hidden">
-        {/* Efeito de ondas */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }}></div>
+      {/* O que priorizo — sem números inventados */}
+      <section className="py-16 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white relative overflow-hidden border-y border-white/5">
+        <div className="absolute inset-0 opacity-[0.07]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
         </div>
-        
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center relative z-10">
+
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 relative z-10">
           {[
-            { value: 8, suffix: "+", label: "Projetos Completos", icon: <FiCode size={32} /> },
-            { value: 100, suffix: "%", label: "Satisfação do Cliente", icon: <FiZap size={32} /> },
-            { value: 3, suffix: "+", label: "Anos de Experiência", icon: <FiTrendingUp size={32} /> },
-          ].map((metric, index) => (
-            <CounterCard key={index} metric={metric} delay={index * 0.1} />
+            {
+              title: "Produto no ar",
+              body: "Deploy, domínio e iterações com base em feedback — como no ConnectWork (connectwork.site).",
+              icon: <FiExternalLink size={28} />,
+            },
+            {
+              title: "Código legível",
+              body: "Estrutura clara e stack moderna para facilitar manutenção e evolução do sistema.",
+              icon: <FiCode size={28} />,
+            },
+            {
+              title: "Comunicação",
+              body: "Alinhamento frequente em freelas e projetos para entregar o que foi combinado.",
+              icon: <FiMessageSquare size={28} />,
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="p-8 rounded-2xl bg-white/[0.06] backdrop-blur-md border border-white/10 hover:border-violet-400/30 transition-colors"
+            >
+              <div className="text-violet-300 mb-4">{item.icon}</div>
+              <h3 className="text-xl font-bold font-display mb-2">{item.title}</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">{item.body}</p>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Projects Section - Grimório */}
+      {/* Projetos */}
       <section
         id="projetos"
-        className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-4 sm:px-6 relative overflow-hidden"
+        className="py-20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 relative overflow-hidden"
       >
         {/* Efeitos mágicos de fundo - Reduzido */}
         <div className="absolute inset-0 opacity-15">
@@ -1416,24 +1301,24 @@ export default function Portfolio() {
             </motion.div>
           ))}
         </div>
-        <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-500/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-violet-600/20 rounded-full filter blur-3xl opacity-25" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-fuchsia-600/15 rounded-full filter blur-3xl opacity-25" />
         
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-extrabold mb-16 text-center"
+            className="text-4xl md:text-5xl font-extrabold mb-16 text-center font-display"
           >
-            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
-              📖 Grimório de Projetos
+            <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">
+              Projetos em produção
             </span>
           </motion.h2>
           
           {/* Timeline 3D - Mostrar apenas em telas grandes */}
           <div className="hidden lg:block">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center text-yellow-400">Carregando timeline...</div>}>
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-violet-300">Carregando projetos…</div>}>
               <Timeline3D projects={filteredProjects} />
             </Suspense>
           </div>
@@ -1447,17 +1332,17 @@ export default function Portfolio() {
               viewport={{ once: true }}
               className="flex justify-center mb-16"
             >
-            <div className="inline-flex bg-slate-800/50 backdrop-blur-md rounded-full p-1 border border-yellow-500/50 shadow-xl">
+            <div className="inline-flex bg-slate-800/60 backdrop-blur-md rounded-full p-1 border border-white/10 shadow-xl">
               {["all", "web", "mobile"].map((filter) => (
                 <motion.button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-3 text-sm font-bold rounded-full transition-all ${
+                  className={`px-6 py-3 text-sm font-semibold rounded-full transition-all ${
                     activeFilter === filter
-                      ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-lg shadow-yellow-500/50"
-                      : "text-gray-400 hover:text-yellow-400 hover:bg-slate-700/50"
+                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/30"
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                   aria-label={`Filtrar projetos por ${
                     filter === "all"
@@ -1468,10 +1353,10 @@ export default function Portfolio() {
                   }`}
                 >
                   {filter === "all"
-                    ? "✨ Todos"
+                    ? "Todos"
                     : filter === "web"
-                    ? "🪄 Web"
-                    : "📱 Mobile"}
+                    ? "Web"
+                    : "Mobile"}
                 </motion.button>
               ))}
             </div>
@@ -1480,24 +1365,29 @@ export default function Portfolio() {
             {/* Carrossel para visualização alternativa */}
             <div className="px-2">
             <Slider {...sliderSettings}>
-              {filteredProjects.map((project) => (
+              {filteredProjects.map((project) => {
+                const demoUrl =
+                  project.links?.demo &&
+                  project.links.demo !== "#" &&
+                  String(project.links.demo).trim() !== ""
+                    ? project.links.demo
+                    : null;
+                return (
                 <div key={project.id} className="px-2 outline-none">
                   <motion.div
-                    className="group bg-white dark:bg-gray-700 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-600 mx-auto max-w-md relative backdrop-blur-sm"
-                    whileHover={{ y: -10, scale: 1.02 }}
+                    className="group bg-slate-800/80 dark:bg-slate-800/90 rounded-2xl shadow-xl overflow-hidden border border-white/10 mx-auto max-w-md relative backdrop-blur-md"
+                    whileHover={{ y: -8, scale: 1.01 }}
                     data-category={project.category}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
                   >
-                    {/* Efeito de brilho no hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-teal-500/10 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/0 via-fuchsia-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                     
-                    {/* Badge de categoria */}
                     <div className="absolute top-4 right-4 z-20">
-                      <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-                        {project.category === "mobile" ? "📱 Mobile" : "🪄 Web"}
+                      <span className="px-3 py-1 bg-white/10 text-violet-200 text-xs font-semibold rounded-full border border-white/15 backdrop-blur-sm">
+                        {project.category === "mobile" ? "Mobile" : "Web"}
                       </span>
                     </div>
                     <motion.div
@@ -1505,8 +1395,8 @@ export default function Portfolio() {
                       relative overflow-hidden 
                       ${
                         project.category === "mobile"
-                          ? "pt-[100%] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
-                          : "pt-[56.25%] bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700"
+                          ? "pt-[100%] bg-slate-900/50"
+                          : "pt-[56.25%] bg-slate-900/40"
                       }
                     `}
                       whileHover={{ scale: 1.05 }}
@@ -1531,20 +1421,20 @@ export default function Portfolio() {
                     </motion.div>
                     <div className="p-6">
                       <motion.h3 
-                        className="text-2xl font-bold mb-3 text-gray-900 dark:text-white bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent"
-                        whileHover={{ x: 5 }}
+                        className="text-2xl font-bold mb-3 font-display bg-gradient-to-r from-violet-200 to-fuchsia-200 bg-clip-text text-transparent"
+                        whileHover={{ x: 4 }}
                       >
                         {project.title}
                       </motion.h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                      <p className="text-slate-300 mb-6 leading-relaxed text-sm md:text-base">
                         {project.description}
                       </p>
 
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Principais recursos:
+                        <h4 className="text-sm font-medium text-slate-500 mb-1">
+                          Destaques
                         </h4>
-                        <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                        <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
                           {project.features.map((feature, i) => (
                             <li key={i}>{feature}</li>
                           ))}
@@ -1552,10 +1442,10 @@ export default function Portfolio() {
                       </div>
 
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Desafios:
+                        <h4 className="text-sm font-medium text-slate-500 mb-1">
+                          Desafio principal
                         </h4>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <p className="text-sm text-slate-300">
                           {project.challenges}
                         </p>
                       </div>
@@ -1568,141 +1458,105 @@ export default function Portfolio() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
-                            whileHover={{ scale: 1.1, y: -2 }}
-                            className="text-xs bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/50 dark:to-amber-900/50 text-yellow-800 dark:text-yellow-300 px-3 py-1.5 rounded-full font-medium border border-yellow-300 dark:border-yellow-700"
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            className="text-xs bg-violet-500/15 text-violet-200 px-3 py-1.5 rounded-full font-medium border border-violet-500/30"
                           >
                             {tag}
                           </motion.span>
                         ))}
                       </div>
                       
-                      {/* Métricas com ícone */}
-                      <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl border border-yellow-300 dark:border-yellow-700">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">⚡</span>
-                          <span className="text-sm text-yellow-800 dark:text-yellow-300 font-semibold">
+                      <div className="mb-6 p-4 rounded-xl border border-white/10 bg-white/5">
+                        <div className="flex items-start gap-2">
+                          <FiExternalLink className="text-violet-300 shrink-0 mt-0.5" />
+                          <span className="text-sm text-slate-200 leading-relaxed">
                             {project.metrics}
                           </span>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between gap-4">
+                      <div className={`flex gap-3 ${demoUrl ? "flex-col sm:flex-row" : ""}`}>
+                        {demoUrl && (
                         <motion.a
-                          href={project.links.demo}
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all group"
+                          href={demoUrl}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <FiExternalLink className="group-hover:rotate-45 transition-transform" />
-                          <span>Ver Feitiço</span>
+                          <FiExternalLink />
+                          <span>Abrir site</span>
                         </motion.a>
+                        )}
                         <motion.a
                           href={project.links.code}
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-700 text-white rounded-xl font-semibold hover:bg-slate-600 transition-all group border border-slate-600"
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`flex items-center justify-center gap-2 px-4 py-3 bg-slate-900/80 text-white rounded-xl font-semibold hover:bg-slate-900 transition-all border border-white/10 ${demoUrl ? "flex-1" : "w-full"}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <FiGithub className="group-hover:scale-110 transition-transform" />
-                          <span>Grimório</span>
+                          <FiGithub />
+                          <span>Ver no GitHub</span>
                         </motion.a>
                       </div>
                     </div>
                   </motion.div>
                 </div>
-              ))}
+              );})}
             </Slider>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Seção de Casas de Hogwarts */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden">
-        {/* Efeitos mágicos - Reduzido */}
-        <div className="absolute inset-0 opacity-15">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-yellow-300"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 10 + 6}px`,
-              }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 4,
-                ease: "easeInOut",
-              }}
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
-        
+      {/* Forma de trabalho */}
+      <section className="py-20 bg-gradient-to-b from-slate-950 to-slate-900 px-6 relative overflow-hidden border-t border-white/5">
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-extrabold mb-16 text-center"
+            className="text-3xl md:text-5xl font-extrabold mb-4 text-center font-display"
           >
-            <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
-              🏰 As Casas de Hogwarts
+            <span className="bg-gradient-to-r from-violet-300 to-cyan-300 bg-clip-text text-transparent">
+              Como costumo entregar
             </span>
           </motion.h2>
+          <p className="text-center text-slate-400 max-w-2xl mx-auto mb-14 text-sm md:text-base">
+            Processo transparente — sem promessas de porcentagem que não posso comprovar aqui.
+          </p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: '🦁', title: 'Grifinória', desc: 'Coragem e determinação', color: 'from-red-600 to-scarlet-600', border: 'border-red-500/50' },
-              { icon: '🦅', title: 'Corvinal', desc: 'Sabedoria e criatividade', color: 'from-blue-600 to-cyan-600', border: 'border-blue-500/50' },
-              { icon: '🦡', title: 'Lufa-Lufa', desc: 'Lealdade e trabalho duro', color: 'from-yellow-600 to-amber-600', border: 'border-yellow-500/50' },
-              { icon: '🐍', title: 'Sonserina', desc: 'Ambição e astúcia', color: 'from-green-600 to-emerald-600', border: 'border-green-500/50' },
-            ].map((house, i) => (
+              { icon: "🎯", title: "Escopo claro", desc: "Requisitos e prioridades alinhados antes de codar." },
+              { icon: "🧩", title: "Integração", desc: "Front, API e banco conversando de ponta a ponta." },
+              { icon: "📱", title: "Responsivo", desc: "Layout que funciona no desktop e no celular." },
+              { icon: "🚀", title: "Deploy", desc: "Coloco no ar e documento o que importa para manter." },
+            ].map((item, i) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30, rotateY: -90 }}
-                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.6 }}
-                whileHover={{ scale: 1.1, y: -10, rotateY: 10 }}
-                className={`bg-gradient-to-br ${house.color} backdrop-blur-md p-6 rounded-2xl border-2 ${house.border} shadow-2xl relative overflow-hidden`}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -6 }}
+                className="bg-white/[0.04] backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:border-violet-500/30 transition-colors"
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{
-                    x: ['-100%', '100%'],
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 3,
-                    ease: 'linear',
-                  }}
-                />
-                <div className="relative z-10 text-center">
-                  <div className="text-6xl mb-4">{house.icon}</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{house.title}</h3>
-                  <p className="text-white/90">{house.desc}</p>
-                </div>
+                <div className="text-4xl mb-3">{item.icon}</div>
+                <h3 className="text-lg font-bold text-white font-display mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section - Coruja Mensageira */}
+      {/* Contato */}
       <section
         id="contato"
-        className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-800 px-6 relative overflow-hidden"
+        className="py-20 bg-gradient-to-b from-slate-900 to-slate-950 px-6 relative overflow-hidden border-t border-white/5"
       >
         {/* Efeitos mágicos - Reduzido */}
         <div className="absolute inset-0 opacity-15">
@@ -1742,10 +1596,10 @@ export default function Portfolio() {
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-12 md:mb-16 text-center"
           >
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent neon-text">
-                🦉 Envie uma Coruja
+              <span className="relative z-10 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent font-display">
+                Contato
               </span>
-              <span className="absolute bottom-2 left-0 w-full h-4 bg-yellow-500/20 z-0 rounded-full blur-xl"></span>
+              <span className="absolute bottom-2 left-0 w-full h-4 bg-violet-500/20 z-0 rounded-full blur-xl"></span>
             </span>
           </motion.h2>
 
@@ -1759,18 +1613,17 @@ export default function Portfolio() {
             <div>
               <motion.h3
                 variants={itemVariant}
-                className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent"
+                className="text-2xl md:text-3xl font-bold mb-4 font-display bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent"
               >
-                Pronto para uma aventura mágica?
+                Vamos conversar?
               </motion.h3>
 
               <motion.p
                 variants={itemVariant}
-                className="text-lg leading-relaxed text-gray-300 mb-8"
+                className="text-lg leading-relaxed text-slate-400 mb-8"
               >
-                Estou disponível para oportunidades de freelance e colaborações.
-                Se você tem uma ideia ou projeto em mente, ou simplesmente quer
-                bater um papo, sinta-se à vontade para entrar em contato.
+                Estou aberto a freelas e colaborações. Se quiser falar sobre o ConnectWork,
+                sobre este portfólio ou um novo projeto, use o formulário ou o e-mail.
               </motion.p>
 
               <motion.div variants={itemVariant} className="space-y-4">
@@ -1995,7 +1848,7 @@ export default function Portfolio() {
       </section>
 
       {/* Footer - Mágico */}
-      <footer className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 text-white py-16 relative overflow-hidden border-t-2 border-yellow-500/50">
+      <footer className="bg-slate-950 text-white py-16 relative overflow-hidden border-t border-white/10">
         {/* Efeitos de fundo */}
         <div className="absolute inset-0 futuristic-grid opacity-10"></div>
         <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-10"></div>
@@ -2015,29 +1868,17 @@ export default function Portfolio() {
               viewport={{ once: true }}
               className="text-center md:text-left"
             >
-              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 bg-clip-text text-transparent">
-                Pronto para uma jornada mágica?
+              <h3 className="text-2xl md:text-3xl font-extrabold mb-6 bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent font-display">
+                Bora construir algo útil?
               </h3>
               <motion.a
                 href="#contato"
-                whileHover={{ scale: 1.1, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-8 py-4 rounded-full font-bold shadow-2xl hover:shadow-yellow-500/50 transition-all relative overflow-hidden"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 transition-all"
               >
-                <span className="relative z-10">Enviar Coruja</span>
-                <motion.span
-                  className="relative z-10 text-2xl"
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  🦉
-                </motion.span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-amber-500 to-yellow-500"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
+                <span className="relative z-10">Ir para contato</span>
+                <FiMail className="relative z-10" size={20} />
               </motion.a>
             </motion.div>
 
@@ -2077,7 +1918,7 @@ export default function Portfolio() {
                   className="group relative p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:border-white/40 transition-all"
                   aria-label={social.label}
                 >
-                  <div className="relative z-10 text-white group-hover:text-amber-300 transition-colors">
+                  <div className="relative z-10 text-white group-hover:text-violet-300 transition-colors">
                     {social.icon}
                   </div>
                   <motion.div
@@ -2097,10 +1938,11 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="border-t border-white/20 w-full pt-8 text-center"
           >
-            <p className="text-xl mb-3 font-semibold">Vamos criar magia juntos! ✨🪄</p>
-            <p className="text-sm opacity-80">
-              © {new Date().getFullYear()} Emerson Morales Junior. Todos os
-              direitos reservados.
+            <p className="text-slate-400 mb-2">
+              Emerson Morales Junior · Full stack
+            </p>
+            <p className="text-sm text-slate-500">
+              © {new Date().getFullYear()} Emerson Morales Junior. Todos os direitos reservados.
             </p>
           </motion.div>
         </div>
@@ -2118,7 +1960,7 @@ export default function Portfolio() {
             whileHover={{ scale: 1.15, y: -5, rotate: 360 }}
             whileTap={{ scale: 0.9 }}
             style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 100 }}
-            className="bg-gradient-to-r from-yellow-500 via-amber-600 to-yellow-500 text-black p-4 rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all group relative overflow-hidden"
+            className="bg-gradient-to-r from-violet-500 via-fuchsia-500 to-violet-500 text-white p-4 rounded-full shadow-xl hover:shadow-violet-500/30 transition-all group relative overflow-hidden"
           >
             {/* Efeito de brilho no hover */}
             <motion.div

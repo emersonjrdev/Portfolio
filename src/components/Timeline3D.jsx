@@ -57,29 +57,35 @@ export default function Timeline3D({ projects = [] }) {
                     ))}
                   </div>
                   
-                  <div className="flex gap-4">
-                    <motion.a
-                      href={project.links.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-teal-500/50 transition-all"
-                    >
-                      <FiExternalLink />
-                      Demo
-                    </motion.a>
-                    <motion.a
-                      href={project.links.code}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg font-semibold hover:bg-gray-600 transition-all border border-gray-600"
-                    >
-                      <FiGithub />
-                      Código
-                    </motion.a>
+                  <div className="flex flex-wrap gap-3">
+                    {project.links?.demo &&
+                      project.links.demo !== "#" &&
+                      String(project.links.demo).trim() !== "" && (
+                        <motion.a
+                          href={project.links.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all"
+                        >
+                          <FiExternalLink />
+                          Ver ao vivo
+                        </motion.a>
+                      )}
+                    {project.links?.code && (
+                      <motion.a
+                        href={project.links.code}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg font-semibold hover:bg-gray-600 transition-all border border-gray-600"
+                      >
+                        <FiGithub />
+                        Código
+                      </motion.a>
+                    )}
                   </div>
                 </div>
               </motion.div>

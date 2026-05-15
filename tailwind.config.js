@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        display: ['Outfit', '"DM Sans"', 'system-ui', 'sans-serif'],
+      },
       colors: {
         teal: {
           50: '#f0fdfa',
